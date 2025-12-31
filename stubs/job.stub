@@ -1,0 +1,20 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{namespace}};
+
+use Qatar\Job;
+
+class {{class}} extends Job
+{
+    /**
+     * Handle the job.
+     *
+     * @param  array<string, mixed>  $payload  Job data passed when the job was queued.
+     */
+    public function handle(array $payload): void
+    {
+        // Write your job logic here
+    }
+}

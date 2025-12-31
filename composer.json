@@ -1,0 +1,68 @@
+{
+  "name": "phast/framework",
+  "description": "A lightweight PHP framework for building CLI, web and API applications",
+  "type": "library",
+  "keywords": [
+    "framework",
+    "php",
+    "psr",
+    "mvc",
+    "routing",
+    "middleware",
+    "dependency-injection",
+    "orm",
+    "database",
+    "queue",
+    "cache",
+    "logging",
+    "email",
+    "jwt",
+    "captcha",
+    "flash-messages"
+  ],
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Vaibhav Pandey",
+      "email": "contact@vaibhavpandey.com"
+    }
+  ],
+  "require": {
+    "php": "^8.2",
+    "vaibhavpandeyvpz/kunfig": "^2.0",
+    "vaibhavpandeyvpz/databoss": "^2.1",
+    "vaibhavpandeyvpz/datum": "^1.1",
+    "vaibhavpandeyvpz/kram": "^1.0",
+    "vaibhavpandeyvpz/clip": "^1.0",
+    "vaibhavpandeyvpz/filtr": "^2.0",
+    "vaibhavpandeyvpz/ank": "^2.0",
+    "vaibhavpandeyvpz/jweety": "^2.0",
+    "vaibhavpandeyvpz/phlash": "^3.0",
+    "vaibhavpandeyvpz/tez": "^3.0",
+    "vaibhavpandeyvpz/phew": "^2.0",
+    "vaibhavpandeyvpz/drishti": "^1.1",
+    "vaibhavpandeyvpz/samay": "^1.0",
+    "vaibhavpandeyvpz/dakiya": "^3.0",
+    "vaibhavpandeyvpz/vidyut": "^3.0",
+    "vaibhavpandeyvpz/sandesh": "^3.0",
+    "vaibhavpandeyvpz/godam": "^2.0",
+    "vaibhavpandeyvpz/soochak": "^2.0",
+    "vaibhavpandeyvpz/katora": "^2.0",
+    "vaibhavpandeyvpz/qatar": "^1.0",
+    "vaibhavpandeyvpz/envelope": "^1.0"
+  },
+  "autoload": {
+    "psr-4": {
+      "Phast\\": "src/"
+    },
+    "files": [
+      "helpers.php"
+    ]
+  },
+  "config": {
+    "sort-packages": true,
+    "optimize-autoloader": true
+  },
+  "minimum-stability": "stable",
+  "prefer-stable": true
+}

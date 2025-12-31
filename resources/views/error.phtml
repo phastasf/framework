@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><?= $code ?> - <?= htmlspecialchars($message) ?></title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f5;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #333;
+        }
+        .error-container {
+            text-align: center;
+            padding: 2rem;
+        }
+        .error-code {
+            font-size: 6rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #666;
+        }
+        .error-message {
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+            color: #666;
+        }
+        .error-description {
+            font-size: 0.9rem;
+            color: #999;
+            margin-bottom: 2rem;
+        }
+        .home-link {
+            display: inline-block;
+            padding: 0.5rem 1.5rem;
+            background: #333;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 0.25rem;
+        }
+        .home-link:hover {
+            background: #555;
+        }
+        .debug-details {
+            background: #fff;
+            border: 1px solid #ddd;
+            border-radius: 0.25rem;
+            padding: 1.5rem;
+            margin-top: 2rem;
+            text-align: left;
+            max-width: 800px;
+            max-height: 500px;
+            overflow: auto;
+        }
+        .debug-details h3 {
+            font-size: 1.1rem;
+            margin-bottom: 1rem;
+            color: #333;
+        }
+        .debug-details p {
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        .debug-details strong {
+            color: #333;
+        }
+        .debug-details pre {
+            background: #f5f5f5;
+            padding: 1rem;
+            border-radius: 0.25rem;
+            overflow-x: auto;
+            font-size: 0.85rem;
+            line-height: 1.5;
+            margin-top: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <div class="error-container">
+        <div class="error-code"><?= $code ?></div>
+        <div class="error-message"><?= htmlspecialchars($message) ?></div>
+        <div class="error-description"><?= htmlspecialchars($description) ?></div>
+        
+        <?php if (isset($debug) && is_array($debug)): ?>
+            <div class="debug-details">
+                <h3>Error Details</h3>
+                <p><strong>Exception:</strong> <?= htmlspecialchars($debug['exception'] ?? 'Unknown') ?></p>
+                <p><strong>Message:</strong> <?= htmlspecialchars($debug['message'] ?? '') ?></p>
+                <p><strong>File:</strong> <?= htmlspecialchars($debug['file'] ?? '') ?></p>
+                <p><strong>Line:</strong> <?= htmlspecialchars((string) ($debug['line'] ?? '')) ?></p>
+                <?php if (!empty($debug['trace'])): ?>
+                    <p><strong>Stack Trace:</strong></p>
+                    <pre><?= htmlspecialchars($debug['trace']) ?></pre>
+                <?php endif; ?>
+            </div>
+        <?php endif; ?>
+        
+        <a href="/" class="home-link">Go Home</a>
+    </div>
+</body>
+</html>
