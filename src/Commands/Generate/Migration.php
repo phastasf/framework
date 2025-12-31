@@ -57,7 +57,7 @@ class Migration extends Command
         }
 
         // Load stub
-        $stubPath = $appBasePath.'/stubs/migration.stub';
+        $stubPath = __DIR__.'/../../../stubs/migration.stub';
         if (! file_exists($stubPath)) {
             $stdio->error("Stub file not found: {$stubPath}");
 

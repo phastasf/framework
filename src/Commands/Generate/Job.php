@@ -59,7 +59,7 @@ class Job extends Command
         }
 
         // Load stub
-        $stubPath = $appBasePath.'/stubs/job.stub';
+        $stubPath = __DIR__.'/../../../stubs/job.stub';
         if (! file_exists($stubPath)) {
             $stdio->error("Stub file not found: {$stubPath}");
 
