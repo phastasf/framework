@@ -40,7 +40,7 @@ return [
         'database' => env('DB_DATABASE', 'phast'),
         'username' => env('DB_USERNAME', 'sa'),
         'password' => env('DB_PASSWORD', ''),
-        'trust_server_certificate' => env('DB_TRUST_SERVER_CERTIFICATE', false),
+        'trust_server_certificate' => (bool) env('DB_TRUST_SERVER_CERTIFICATE', false),
     ],
 
     'migrations' => BASE_PATH.'/database/migrations',

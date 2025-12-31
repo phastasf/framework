@@ -10,7 +10,7 @@ return [
 
     'middleware' => [
         // Whether authentication is required (true) or optional (false)
-        'required' => env('AUTH_REQUIRED', true),
+        'required' => (bool) env('AUTH_REQUIRED', true),
 
         // Paths/prefixes to include (empty array = all paths)
         // Examples: ['/api/*', '/admin']
