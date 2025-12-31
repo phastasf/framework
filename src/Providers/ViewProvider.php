@@ -6,6 +6,7 @@ namespace Phast\Providers;
 
 use Katora\Container;
 use Katora\ServiceProviderInterface;
+use Kunfig\ConfigInterface;
 use Phew\View;
 use Phew\ViewInterface;
 
@@ -20,6 +21,12 @@ class ViewProvider implements ServiceProviderInterface
         $container->set('view.paths', $container->share(function (Container $c) {
             $config = $c->get('config');
             $paths = $config->get('view.paths', []);
+
+            // Convert ConfigInterface to array if needed
+            if ($paths instanceof ConfigInterface) {
+                $paths = $paths->all();
+            }
+
             $result = [];
 
             // Process paths from config

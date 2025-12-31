@@ -68,6 +68,14 @@ class HttpProvider implements ServiceProviderInterface
         $headerName = $config->get('auth.middleware.header', 'Authorization');
         $tokenPrefix = $config->get('auth.middleware.prefix', 'Bearer');
 
+        // Convert ConfigInterface to array if needed
+        if ($include instanceof ConfigInterface) {
+            $include = $include->all();
+        }
+        if ($exclude instanceof ConfigInterface) {
+            $exclude = $exclude->all();
+        }
+
         // Ensure arrays
         if (! is_array($include)) {
             $include = [];

@@ -29,6 +29,11 @@ class LoggingProvider implements ServiceProviderInterface
             $config = $c->get('config');
             $backend = $config->get('logging.backend', 'file');
 
+            // Convert ConfigInterface to array if needed
+            if ($backend instanceof ConfigInterface) {
+                $backend = $backend->all();
+            }
+
             // If backend is a string (comma-separated), convert to array
             if (is_string($backend)) {
                 $backend = array_map('trim', explode(',', $backend));
