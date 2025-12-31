@@ -16,35 +16,19 @@ class ConfigProvider implements ServiceProviderInterface
 {
     public function provide(Container $container): void
     {
-        $config = new Config;
-
-        // First, load default configs from package root config/
-        $defaults = $this->loadConfigFiles(__DIR__.'/../../config');
-        foreach ($defaults as $key => $values) {
-            $config->set($key, $values);
-        }
-
-        // Then, load and merge overrides from project root config/
-        $overrides = $this->loadConfigFiles($config->get('app.base_path').'/config');
-        foreach ($overrides as $key => $values) {
-            // Merge with existing config if it exists, otherwise just set
-            if ($config->has($key)) {
-                $existing = $config->get($key);
-                if (is_array($existing) && is_array($values)) {
-                    $merged = $this->mergeConfig($existing, $values);
-                    $config->set($key, $merged);
-                } else {
-                    // Override completely if not both arrays
-                    $config->set($key, $values);
-                }
-            } else {
-                $config->set($key, $values);
-            }
-        }
-
         // Register config
-        $container->set('config', $config);
-        $container->set(ConfigInterface::class, $config);
+        $container->set('config', $container->share(function () {
+            // First, load default configs from package root config/
+            $defaults = $this->loadConfigFiles(__DIR__.'/../../config');
+            $config = new Config($defaults);
+
+            // Then, load and merge overrides from project root config/
+            $overrides = $this->loadConfigFiles($config->get('app.base_path').'/config');
+            $config->mix(new Config($overrides));
+
+            return $config;
+        }));
+        $container->set(ConfigInterface::class, fn () => $container->get('config'));
     }
 
     /**
@@ -69,28 +53,5 @@ class ConfigProvider implements ServiceProviderInterface
         }
 
         return $configs;
-    }
-
-    /**
-     * Recursively merge two config arrays.
-     * Override values take precedence.
-     *
-     * @param  array  $default  Default config array
-     * @param  array  $override  Override config array
-     * @return array Merged config array
-     */
-    protected function mergeConfig(array $default, array $override): array
-    {
-        foreach ($override as $key => $value) {
-            if (isset($default[$key]) && is_array($default[$key]) && is_array($value)) {
-                // Recursively merge nested arrays
-                $default[$key] = $this->mergeConfig($default[$key], $value);
-            } else {
-                // Override with new value
-                $default[$key] = $value;
-            }
-        }
-
-        return $default;
     }
 }

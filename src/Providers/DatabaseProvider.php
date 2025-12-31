@@ -72,10 +72,6 @@ class DatabaseProvider implements ServiceProviderInterface
         $container->set(ConnectionInterface::class, fn (Container $c) => $c->get('database.connection'));
 
         // Set connection for Datum models
-        $container->set('database.setup', function (Container $c) {
-            Model::connect($c->get(ConnectionInterface::class));
-
-            return true;
-        });
+        Model::connect(fn () => $container->get(ConnectionInterface::class));
     }
 }
