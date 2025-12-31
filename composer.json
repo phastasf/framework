@@ -1,5 +1,5 @@
 {
-  "name": "phast/framework",
+  "name": "phastasf/framework",
   "description": "A lightweight PHP framework for building CLI, web and API applications",
   "type": "library",
   "keywords": [

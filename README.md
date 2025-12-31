@@ -1,8 +1,8 @@
 # Phast Framework
 
-[![Latest Version](https://img.shields.io/packagist/v/phast/framework.svg?style=flat-square)](https://packagist.org/packages/phast/framework)
-[![License](https://img.shields.io/packagist/l/phast/framework.svg?style=flat-square)](LICENSE)
-[![PHP Version](https://img.shields.io/packagist/php-v/phast/framework.svg?style=flat-square)](https://packagist.org/packages/phast/framework)
+[![Latest Version](https://img.shields.io/packagist/v/phastasf/framework.svg?style=flat-square)](https://packagist.org/packages/phastasf/framework)
+[![License](https://img.shields.io/packagist/l/phastasf/framework.svg?style=flat-square)](LICENSE)
+[![PHP Version](https://img.shields.io/packagist/php-v/phastasf/framework.svg?style=flat-square)](https://packagist.org/packages/phastasf/framework)
 
 A lightweight, modern PHP framework for building CLI, web, and API applications. Phast is built on PSR standards and provides a clean, intuitive API for rapid development.
 
@@ -57,7 +57,7 @@ A lightweight, modern PHP framework for building CLI, web, and API applications.
 Install via Composer:
 
 ```bash
-composer require phast/framework
+composer require phastasf/framework
 ```
 
 ## Quick Start
