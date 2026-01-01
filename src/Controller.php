@@ -8,7 +8,7 @@ use Filtr\ResultInterface;
 use Filtr\Validator;
 use Katora\Container;
 use Phew\ViewInterface;
-use Psr\Http\Factory\ResponseFactoryInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ResponseInterface;
 
 /**
