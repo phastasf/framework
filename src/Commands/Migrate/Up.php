@@ -58,9 +58,7 @@ class Up extends Command
             }
         } catch (\Throwable $e) {
             $stdio->error('Migration error: '.$e->getMessage());
-            if ($stdio->isVerbose()) {
-                $stdio->writeln($e->getTraceAsString());
-            }
+            $stdio->writeln($e->getTraceAsString());
 
             return 1;
         }
