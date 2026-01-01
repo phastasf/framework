@@ -184,6 +184,7 @@ class SendEmailJob extends Job
 
 ### Generators
 
+- `g:command` - Generate console command
 - `g:controller` - Generate controller
 - `g:model` - Generate model
 - `g:migration` - Generate migration
@@ -247,6 +248,7 @@ return [
 ## Error Handling
 
 The framework includes centralized error handling that:
+
 - Catches all exceptions
 - Returns JSON for API requests (`Accept: application/json`)
 - Renders HTML error pages for web requests

@@ -21,6 +21,11 @@ return [
         'path' => BASE_PATH.'/app/Models',
     ],
 
+    'commands' => [
+        'namespace' => 'App\\Commands',
+        'path' => BASE_PATH.'/app/Commands',
+    ],
+
     'routes' => [
         'web' => BASE_PATH.'/routes/web.php',
     ],

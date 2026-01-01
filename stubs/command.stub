@@ -1,0 +1,32 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{namespace}};
+
+use Clip\Command;
+use Clip\Stdio;
+
+/**
+ * Command to {{class}}.
+ */
+class {{class}} extends Command
+{
+    public function getName(): string
+    {
+        return 'command:name';
+    }
+
+    public function getDescription(): string
+    {
+        return 'Command description';
+    }
+
+    public function execute(Stdio $stdio): int
+    {
+        // Your command logic here
+
+        return 0;
+    }
+}
+
