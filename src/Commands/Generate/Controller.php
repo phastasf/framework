@@ -39,11 +39,23 @@ class Controller extends Command
             $name .= 'Controller';
         }
 
-        // Determine namespace and path
-        $namespace = 'App\\Controllers';
+        // Determine namespace and path from config
         $config = $this->get('config');
-        $appBasePath = $config->get('app.base_path');
-        $basePath = $appBasePath.'/app/Controllers';
+        $namespace = $config->get('app.controllers.namespace', 'App\\Controllers');
+        $basePath = $config->get('app.controllers.path');
+        
+        // If path is not configured, fall back to default
+        if (empty($basePath)) {
+            $appBasePath = $config->get('app.base_path');
+            $basePath = $appBasePath.'/app/Controllers';
+        }
+        
+        // Handle relative paths
+        if (! str_starts_with($basePath, '/')) {
+            $appBasePath = $config->get('app.base_path');
+            $basePath = $appBasePath.'/'.ltrim($basePath, '/');
+        }
+        
         $filePath = $basePath.'/'.$name.'.php';
 
         // Check if file already exists

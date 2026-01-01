@@ -27,11 +27,29 @@ class Serve extends Command
         $host = $stdio->getOption('host', '127.0.0.1');
         $port = (int) $stdio->getOption('port', '8000');
 
-        // Determine the public directory and router file
+        // Determine the public directory and router file from config
         $config = $this->get('config');
-        $appBasePath = $config->get('app.base_path');
-        $publicPath = $appBasePath.'/public';
-        $routerFile = $publicPath.'/index.php';
+        $publicPath = $config->get('app.public.path');
+        $routerFile = $config->get('app.public.index');
+        
+        // If not configured, fall back to defaults
+        if (empty($publicPath)) {
+            $appBasePath = $config->get('app.base_path');
+            $publicPath = $appBasePath.'/public';
+        }
+        if (empty($routerFile)) {
+            $routerFile = $publicPath.'/index.php';
+        }
+        
+        // Handle relative paths
+        if (! str_starts_with($publicPath, '/')) {
+            $appBasePath = $config->get('app.base_path');
+            $publicPath = $appBasePath.'/'.ltrim($publicPath, '/');
+        }
+        if (! str_starts_with($routerFile, '/')) {
+            $appBasePath = $config->get('app.base_path');
+            $routerFile = $appBasePath.'/'.ltrim($routerFile, '/');
+        }
 
         if (! file_exists($routerFile)) {
             $stdio->error("Public entrypoint not found: {$routerFile}");

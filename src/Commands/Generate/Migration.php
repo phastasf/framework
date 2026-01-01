@@ -38,10 +38,22 @@ class Migration extends Command
         $className = $this->toPascalCase($name);
         $fileName = "{$version}_{$name}.php";
 
-        // Determine path
+        // Determine path from config
         $config = $this->get('config');
-        $appBasePath = $config->get('app.base_path');
-        $migrationsPath = $appBasePath.'/database/migrations';
+        $migrationsPath = $config->get('database.migrations');
+        
+        // If not configured, fall back to default
+        if (empty($migrationsPath)) {
+            $appBasePath = $config->get('app.base_path');
+            $migrationsPath = $appBasePath.'/database/migrations';
+        }
+        
+        // Handle relative paths
+        if (! str_starts_with($migrationsPath, '/')) {
+            $appBasePath = $config->get('app.base_path');
+            $migrationsPath = $appBasePath.'/'.ltrim($migrationsPath, '/');
+        }
+        
         $filePath = $migrationsPath.'/'.$fileName;
 
         // Check if file already exists

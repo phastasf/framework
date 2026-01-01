@@ -8,5 +8,20 @@ return [
 
     'controllers' => [
         'namespace' => 'App\\Controllers',
+        'path' => BASE_PATH.'/app/Controllers',
+    ],
+
+    'jobs' => [
+        'namespace' => 'App\\Jobs',
+        'path' => BASE_PATH.'/app/Jobs',
+    ],
+
+    'routes' => [
+        'web' => BASE_PATH.'/routes/web.php',
+    ],
+
+    'public' => [
+        'path' => BASE_PATH.'/public',
+        'index' => BASE_PATH.'/public/index.php',
     ],
 ];

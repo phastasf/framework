@@ -33,10 +33,21 @@ class RouterProvider implements ServiceProviderInterface
      */
     protected function loadRoutes(Router $router, Container $container): void
     {
-        // Get routes file path
+        // Get routes file path from config
         $config = $container->get('config');
-        $basePath = $config->get('app.base_path');
-        $routesFile = $basePath.'/routes/web.php';
+        $routesFile = $config->get('app.routes.web');
+
+        // If not configured, fall back to default
+        if (empty($routesFile)) {
+            $basePath = $config->get('app.base_path');
+            $routesFile = $basePath.'/routes/web.php';
+        }
+
+        // Handle relative paths
+        if (! str_starts_with($routesFile, '/')) {
+            $basePath = $config->get('app.base_path');
+            $routesFile = $basePath.'/'.ltrim($routesFile, '/');
+        }
 
         if (file_exists($routesFile)) {
             $registerRoutes = require $routesFile;
