@@ -9,11 +9,25 @@ class {{class}} implements MigrationInterface
 {
     public function up(ConnectionInterface $connection): void
     {
-        // Write your migration code here
+        $connection->create('table_name', [
+            'id' => [
+                'type' => 'INTEGER',
+                'auto_increment' => true,
+                'primary' => true,
+            ],
+            'created_at' => [
+                'type' => 'DATETIME',
+                'null' => false,
+            ],
+            'updated_at' => [
+                'type' => 'DATETIME',
+                'null' => false,
+            ],
+        ]);
     }
 
     public function down(ConnectionInterface $connection): void
     {
-        // Write your rollback code here
+        $connection->drop('table_name');
     }
 }
