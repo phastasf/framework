@@ -43,19 +43,19 @@ class Job extends Command
         $config = $this->get('config');
         $namespace = $config->get('app.jobs.namespace', 'App\\Jobs');
         $basePath = $config->get('app.jobs.path');
-        
+
         // If path is not configured, fall back to default
         if (empty($basePath)) {
             $appBasePath = $config->get('app.base_path');
             $basePath = $appBasePath.'/app/Jobs';
         }
-        
+
         // Handle relative paths
         if (! str_starts_with($basePath, '/')) {
             $appBasePath = $config->get('app.base_path');
             $basePath = $appBasePath.'/'.ltrim($basePath, '/');
         }
-        
+
         $filePath = $basePath.'/'.$name.'.php';
 
         // Check if file already exists

@@ -16,6 +16,11 @@ return [
         'path' => BASE_PATH.'/app/Jobs',
     ],
 
+    'models' => [
+        'namespace' => 'App\\Models',
+        'path' => BASE_PATH.'/app/Models',
+    ],
+
     'routes' => [
         'web' => BASE_PATH.'/routes/web.php',
     ],

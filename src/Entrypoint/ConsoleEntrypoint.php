@@ -9,6 +9,9 @@ use Katora\Container;
 use Phast\Commands\Generate\Controller;
 use Phast\Commands\Generate\Job;
 use Phast\Commands\Generate\Migration;
+use Phast\Commands\Generate\Model;
+use Phast\Commands\Migrate\Down;
+use Phast\Commands\Migrate\Up;
 use Phast\Commands\Serve;
 use Phast\Commands\Worker;
 
@@ -34,6 +37,9 @@ class ConsoleEntrypoint
             Controller::class,
             Migration::class,
             Job::class,
+            Model::class,
+            Up::class,
+            Down::class,
             Serve::class,
             Worker::class,
         ];

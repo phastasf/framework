@@ -31,7 +31,7 @@ class Serve extends Command
         $config = $this->get('config');
         $publicPath = $config->get('app.public.path');
         $routerFile = $config->get('app.public.index');
-        
+
         // If not configured, fall back to defaults
         if (empty($publicPath)) {
             $appBasePath = $config->get('app.base_path');
@@ -40,7 +40,7 @@ class Serve extends Command
         if (empty($routerFile)) {
             $routerFile = $publicPath.'/index.php';
         }
-        
+
         // Handle relative paths
         if (! str_starts_with($publicPath, '/')) {
             $appBasePath = $config->get('app.base_path');
