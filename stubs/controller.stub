@@ -5,11 +5,12 @@ declare(strict_types=1);
 namespace {{namespace}};
 
 use Phast\Controller;
+use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 
 class {{class}} extends Controller
 {
-    public function index(ServerRequestInterface $request)
+    public function index(ServerRequestInterface $request): ResponseInterface
     {
         return $this->render('welcome', [
             'message' => 'Hello from {{class}}',

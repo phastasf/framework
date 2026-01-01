@@ -6,12 +6,12 @@ namespace Phast\Providers;
 
 use Katora\Container;
 use Katora\ServiceProviderInterface;
-use Psr\Http\Factory\RequestFactoryInterface;
-use Psr\Http\Factory\ResponseFactoryInterface;
-use Psr\Http\Factory\ServerRequestFactoryInterface;
-use Psr\Http\Factory\StreamFactoryInterface;
-use Psr\Http\Factory\UploadedFileFactoryInterface;
-use Psr\Http\Factory\UriFactoryInterface;
+use Psr\Http\Message\RequestFactoryInterface;
+use Psr\Http\Message\ResponseFactoryInterface;
+use Psr\Http\Message\ServerRequestFactoryInterface;
+use Psr\Http\Message\StreamFactoryInterface;
+use Psr\Http\Message\UploadedFileFactoryInterface;
+use Psr\Http\Message\UriFactoryInterface;
 use Sandesh\RequestFactory;
 use Sandesh\ResponseFactory;
 use Sandesh\ServerRequestFactory;
