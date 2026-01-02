@@ -186,17 +186,18 @@ class SendEmailJob extends Job
 
 - `g:command` - Generate console command
 - `g:controller` - Generate controller
-- `g:model` - Generate model
-- `g:migration` - Generate migration
 - `g:job` - Generate job
+- `g:migration` - Generate migration
+- `g:model` - Generate model
 
 ### Database
 
-- `m:up` - Run pending migrations
 - `m:down [count]` - Rollback migrations (default: 1)
+- `m:up` - Run pending migrations
 
 ### Development
 
+- `cache:clear` - Clear cached config and routes files
 - `serve` - Start development server
 - `worker` - Run queue worker
 

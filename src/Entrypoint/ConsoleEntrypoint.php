@@ -7,6 +7,7 @@ namespace Phast\Entrypoint;
 use Clip\Command as BaseCommand;
 use Clip\Console;
 use Katora\Container;
+use Phast\Commands\ClearCache;
 use Phast\Commands\Generate\Command as GenerateCommand;
 use Phast\Commands\Generate\Controller;
 use Phast\Commands\Generate\Job;
@@ -36,14 +37,15 @@ class ConsoleEntrypoint
     {
         // Register framework commands
         $commands = [
+            ClearCache::class,
             Controller::class,
-            Migration::class,
-            Job::class,
-            Model::class,
-            GenerateCommand::class,
-            Up::class,
             Down::class,
+            GenerateCommand::class,
+            Job::class,
+            Migration::class,
+            Model::class,
             Serve::class,
+            Up::class,
             Worker::class,
         ];
 

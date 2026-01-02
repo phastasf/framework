@@ -18,13 +18,9 @@ class RouterProvider implements ServiceProviderInterface
         // Register router
         $container->set('router', $container->share(function (Container $c) {
             $config = $c->get('config');
-            $debug = $config->get('app.debug', true);
 
-            // Try to load precompiled routes in production mode
-            $precompiled = null;
-            if (! $debug) {
-                $precompiled = $this->loadPrecompiledRoutes($config);
-            }
+            // Try to load from cache if it exists (regardless of debug mode)
+            $precompiled = $this->loadPrecompiledRoutes($config);
 
             $router = new Router($precompiled);
 
@@ -32,7 +28,8 @@ class RouterProvider implements ServiceProviderInterface
             if ($precompiled === null) {
                 $this->loadRoutes($router, $c);
 
-                // Compile and cache routes in production mode
+                // If not in debug mode and cache doesn't exist, create cache
+                $debug = $config->get('app.debug', true);
                 if (! $debug) {
                     $this->cacheRoutes($router, $config);
                 }
@@ -52,23 +49,13 @@ class RouterProvider implements ServiceProviderInterface
     protected function loadPrecompiledRoutes($config): ?array
     {
         $basePath = $config->get('app.base_path');
-        $cacheFile = $basePath.'/storage/cache/routes.php';
-
-        if (! file_exists($cacheFile)) {
+        if (empty($basePath)) {
             return null;
         }
 
-        // Check if routes file is newer than cache (cache invalidation)
-        $routesFile = $config->get('app.routes.web');
-        if (empty($routesFile)) {
-            $routesFile = $basePath.'/routes/web.php';
-        }
-        if (! str_starts_with($routesFile, '/')) {
-            $routesFile = $basePath.'/'.ltrim($routesFile, '/');
-        }
+        $cacheFile = $basePath.'/storage/cache/routes.php';
 
-        if (file_exists($routesFile) && filemtime($routesFile) > filemtime($cacheFile)) {
-            // Routes file is newer, invalidate cache
+        if (! file_exists($cacheFile)) {
             return null;
         }
 
