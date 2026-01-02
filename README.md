@@ -192,13 +192,13 @@ class SendEmailJob extends Job
 
 ### Database
 
-- `m:down [count]` - Rollback migrations (default: 1)
 - `m:up` - Run pending migrations
+- `m:down [count]` - Rollback migrations (default: 1)
 
 ### Development
 
-- `cache:clear` - Clear cached config and routes files
 - `serve` - Start development server
+- `uncache` - Clear cached config, routes, and application cache
 - `worker` - Run queue worker
 
 ## Usage Examples

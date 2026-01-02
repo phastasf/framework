@@ -8,7 +8,7 @@ return [
 
     // File store configuration
     'file' => [
-        'path' => BASE_PATH.'/storage/cache',
+        'path' => BASE_PATH.'/storage/cache/app',
     ],
 
     // Redis store configuration (ext-redis)

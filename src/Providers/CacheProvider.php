@@ -61,7 +61,7 @@ class CacheProvider implements ServiceProviderInterface
     protected function createFileStore(ConfigInterface $config): FileSystemStore
     {
         $basePath = $config->get('app.base_path');
-        $cachePath = $config->get('cache.file.path', $basePath.'/storage/cache');
+        $cachePath = $config->get('cache.file.path', $basePath.'/storage/cache/app');
 
         // Handle relative paths
         if (! str_starts_with($cachePath, '/')) {

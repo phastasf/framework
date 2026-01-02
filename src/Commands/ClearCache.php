@@ -6,6 +6,7 @@ namespace Phast\Commands;
 
 use Clip\Command;
 use Clip\Stdio;
+use Psr\SimpleCache\CacheInterface;
 
 /**
  * Command to clear cached files.
@@ -14,12 +15,12 @@ class ClearCache extends Command
 {
     public function getName(): string
     {
-        return 'cache:clear';
+        return 'uncache';
     }
 
     public function getDescription(): string
     {
-        return 'Clear cached config and routes files';
+        return 'Clear cached config, routes, and application cache';
     }
 
     public function execute(Stdio $stdio): int
@@ -60,6 +61,17 @@ class ClearCache extends Command
                 $stdio->error("Failed to delete routes cache: {$routesCache}");
 
                 return 1;
+            }
+        }
+
+        // Clear application cache if available
+        if ($this->has(CacheInterface::class)) {
+            $cache = $this->get(CacheInterface::class);
+            if ($cache->clear()) {
+                $stdio->info('Cleared application cache');
+                $cleared = true;
+            } else {
+                $stdio->warn('Failed to clear application cache');
             }
         }
 
