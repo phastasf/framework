@@ -13,6 +13,10 @@ use Kunfig\ConfigInterface;
  */
 class Job extends Command
 {
+    public function __construct(
+        private readonly ConfigInterface $config
+    ) {}
+
     public function getName(): string
     {
         return 'g:job';
@@ -23,7 +27,7 @@ class Job extends Command
         return 'Generate a new job class';
     }
 
-    public function execute(Stdio $stdio, ConfigInterface $config): int
+    public function execute(Stdio $stdio): int
     {
         $name = $stdio->getArgument(0);
 
@@ -41,18 +45,18 @@ class Job extends Command
         }
 
         // Determine namespace and path from config
-        $namespace = $config->get('app.jobs.namespace', 'App\\Jobs');
-        $basePath = $config->get('app.jobs.path');
+        $namespace = $this->config->get('app.jobs.namespace', 'App\\Jobs');
+        $basePath = $this->config->get('app.jobs.path');
 
         // If path is not configured, fall back to default
         if (empty($basePath)) {
-            $appBasePath = $config->get('app.base_path');
+            $appBasePath = $this->config->get('app.base_path');
             $basePath = $appBasePath.'/app/Jobs';
         }
 
         // Handle relative paths
         if (! str_starts_with($basePath, '/')) {
-            $appBasePath = $config->get('app.base_path');
+            $appBasePath = $this->config->get('app.base_path');
             $basePath = $appBasePath.'/'.ltrim($basePath, '/');
         }
 

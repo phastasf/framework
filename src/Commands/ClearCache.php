@@ -14,6 +14,11 @@ use Psr\SimpleCache\CacheInterface;
  */
 class ClearCache extends Command
 {
+    public function __construct(
+        private readonly ConfigInterface $config,
+        private readonly ?CacheInterface $cache = null
+    ) {}
+
     public function getName(): string
     {
         return 'uncache';
@@ -24,9 +29,9 @@ class ClearCache extends Command
         return 'Clear cached config, routes, and application cache';
     }
 
-    public function execute(Stdio $stdio, ConfigInterface $config, ?CacheInterface $cache = null): int
+    public function execute(Stdio $stdio): int
     {
-        $basePath = $config->get('app.base_path');
+        $basePath = $this->config->get('app.base_path');
 
         if (empty($basePath)) {
             $stdio->error('Base path not configured');
@@ -65,8 +70,8 @@ class ClearCache extends Command
         }
 
         // Clear application cache if available
-        if ($cache !== null) {
-            if ($cache->clear()) {
+        if ($this->cache !== null) {
+            if ($this->cache->clear()) {
                 $stdio->info('Cleared application cache');
                 $cleared = true;
             } else {

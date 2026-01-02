@@ -14,12 +14,9 @@ use ReflectionParameter;
  */
 class DependencyResolver
 {
-    protected Container $container;
-
-    public function __construct(Container $container)
-    {
-        $this->container = $container;
-    }
+    public function __construct(
+        private readonly Container $container
+    ) {}
 
     /**
      * Instantiate a class with constructor dependency injection.

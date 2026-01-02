@@ -13,6 +13,10 @@ use Kunfig\ConfigInterface;
  */
 class Controller extends Command
 {
+    public function __construct(
+        private readonly ConfigInterface $config
+    ) {}
+
     public function getName(): string
     {
         return 'g:controller';
@@ -23,7 +27,7 @@ class Controller extends Command
         return 'Generate a new controller class';
     }
 
-    public function execute(Stdio $stdio, ConfigInterface $config): int
+    public function execute(Stdio $stdio): int
     {
         $name = $stdio->getArgument(0);
 
@@ -41,18 +45,18 @@ class Controller extends Command
         }
 
         // Determine namespace and path from config
-        $namespace = $config->get('app.controllers.namespace', 'App\\Controllers');
-        $basePath = $config->get('app.controllers.path');
+        $namespace = $this->config->get('app.controllers.namespace', 'App\\Controllers');
+        $basePath = $this->config->get('app.controllers.path');
 
         // If path is not configured, fall back to default
         if (empty($basePath)) {
-            $appBasePath = $config->get('app.base_path');
+            $appBasePath = $this->config->get('app.base_path');
             $basePath = $appBasePath.'/app/Controllers';
         }
 
         // Handle relative paths
         if (! str_starts_with($basePath, '/')) {
-            $appBasePath = $config->get('app.base_path');
+            $appBasePath = $this->config->get('app.base_path');
             $basePath = $appBasePath.'/'.ltrim($basePath, '/');
         }
 

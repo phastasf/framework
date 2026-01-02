@@ -13,6 +13,10 @@ use Kram\MigrationManager;
  */
 class Down extends Command
 {
+    public function __construct(
+        private readonly MigrationManager $manager
+    ) {}
+
     public function getName(): string
     {
         return 'm:down';
@@ -23,7 +27,7 @@ class Down extends Command
         return 'Rollback the last database migration';
     }
 
-    public function execute(Stdio $stdio, MigrationManager $manager): int
+    public function execute(Stdio $stdio): int
     {
 
         // Get optional count parameter (default: 1)
@@ -38,7 +42,7 @@ class Down extends Command
         $stdio->writeln();
 
         try {
-            $result = $manager->rollbackTo(null, $count);
+            $result = $this->manager->rollbackTo(null, $count);
 
             if ($result->success) {
                 if (empty($result->rolledBack)) {

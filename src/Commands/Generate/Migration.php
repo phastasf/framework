@@ -13,6 +13,10 @@ use Kunfig\ConfigInterface;
  */
 class Migration extends Command
 {
+    public function __construct(
+        private readonly ConfigInterface $config
+    ) {}
+
     public function getName(): string
     {
         return 'g:migration';
@@ -23,7 +27,7 @@ class Migration extends Command
         return 'Generate a new migration class';
     }
 
-    public function execute(Stdio $stdio, ConfigInterface $config): int
+    public function execute(Stdio $stdio): int
     {
         $name = $stdio->getArgument(0);
 
@@ -40,17 +44,17 @@ class Migration extends Command
         $fileName = "{$version}_{$name}.php";
 
         // Determine path from config
-        $migrationsPath = $config->get('database.migrations');
+        $migrationsPath = $this->config->get('database.migrations');
 
         // If not configured, fall back to default
         if (empty($migrationsPath)) {
-            $appBasePath = $config->get('app.base_path');
+            $appBasePath = $this->config->get('app.base_path');
             $migrationsPath = $appBasePath.'/database/migrations';
         }
 
         // Handle relative paths
         if (! str_starts_with($migrationsPath, '/')) {
-            $appBasePath = $config->get('app.base_path');
+            $appBasePath = $this->config->get('app.base_path');
             $migrationsPath = $appBasePath.'/'.ltrim($migrationsPath, '/');
         }
 

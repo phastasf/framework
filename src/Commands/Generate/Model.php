@@ -13,6 +13,10 @@ use Kunfig\ConfigInterface;
  */
 class Model extends Command
 {
+    public function __construct(
+        private readonly ConfigInterface $config
+    ) {}
+
     public function getName(): string
     {
         return 'g:model';
@@ -23,7 +27,7 @@ class Model extends Command
         return 'Generate a new model class';
     }
 
-    public function execute(Stdio $stdio, ConfigInterface $config): int
+    public function execute(Stdio $stdio): int
     {
         $name = $stdio->getArgument(0);
 
@@ -38,18 +42,18 @@ class Model extends Command
         $name = ucfirst($name);
 
         // Determine namespace and path from config
-        $namespace = $config->get('app.models.namespace', 'App\\Models');
-        $basePath = $config->get('app.models.path');
+        $namespace = $this->config->get('app.models.namespace', 'App\\Models');
+        $basePath = $this->config->get('app.models.path');
 
         // If path is not configured, fall back to default
         if (empty($basePath)) {
-            $appBasePath = $config->get('app.base_path');
+            $appBasePath = $this->config->get('app.base_path');
             $basePath = $appBasePath.'/app/Models';
         }
 
         // Handle relative paths
         if (! str_starts_with($basePath, '/')) {
-            $appBasePath = $config->get('app.base_path');
+            $appBasePath = $this->config->get('app.base_path');
             $basePath = $appBasePath.'/'.ltrim($basePath, '/');
         }
 

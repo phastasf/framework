@@ -13,6 +13,10 @@ use Kunfig\ConfigInterface;
  */
 class Serve extends Command
 {
+    public function __construct(
+        private readonly ConfigInterface $config
+    ) {}
+
     public function getName(): string
     {
         return 'serve';
@@ -23,18 +27,18 @@ class Serve extends Command
         return 'Start the PHP development server';
     }
 
-    public function execute(Stdio $stdio, ConfigInterface $config): int
+    public function execute(Stdio $stdio): int
     {
         $host = $stdio->getOption('host', '127.0.0.1');
         $port = (int) $stdio->getOption('port', '8000');
 
         // Determine the public directory and router file from config
-        $publicPath = $config->get('app.public.path');
-        $routerFile = $config->get('app.public.index');
+        $publicPath = $this->config->get('app.public.path');
+        $routerFile = $this->config->get('app.public.index');
 
         // If not configured, fall back to defaults
         if (empty($publicPath)) {
-            $appBasePath = $config->get('app.base_path');
+            $appBasePath = $this->config->get('app.base_path');
             $publicPath = $appBasePath.'/public';
         }
         if (empty($routerFile)) {
@@ -43,11 +47,11 @@ class Serve extends Command
 
         // Handle relative paths
         if (! str_starts_with($publicPath, '/')) {
-            $appBasePath = $config->get('app.base_path');
+            $appBasePath = $this->config->get('app.base_path');
             $publicPath = $appBasePath.'/'.ltrim($publicPath, '/');
         }
         if (! str_starts_with($routerFile, '/')) {
-            $appBasePath = $config->get('app.base_path');
+            $appBasePath = $this->config->get('app.base_path');
             $routerFile = $appBasePath.'/'.ltrim($routerFile, '/');
         }
 

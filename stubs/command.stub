@@ -12,6 +12,9 @@ use Clip\Stdio;
  */
 class {{class}} extends Command
 {
+    // Add constructor with dependencies if needed
+    // Example: public function __construct(private readonly ConfigInterface $config) { }
+
     public function getName(): string
     {
         return 'command:name';
@@ -29,4 +32,3 @@ class {{class}} extends Command
         return 0;
     }
 }
-

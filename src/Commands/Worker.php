@@ -15,6 +15,10 @@ use Qatar\WorkerOptions;
  */
 class Worker extends Command
 {
+    public function __construct(
+        private readonly Queue $queue
+    ) {}
+
     public function getName(): string
     {
         return 'worker';
@@ -25,7 +29,7 @@ class Worker extends Command
         return 'Run queue worker to process jobs';
     }
 
-    public function execute(Stdio $stdio, Queue $queue): int
+    public function execute(Stdio $stdio): int
     {
 
         // Parse worker options from command line
@@ -43,7 +47,7 @@ class Worker extends Command
             stopOnEmpty: $stopOnEmpty
         );
 
-        $worker = new QueueWorker($queue, $options);
+        $worker = new QueueWorker($this->queue, $options);
 
         $stdio->writeln();
         $stdio->info('Queue worker started');

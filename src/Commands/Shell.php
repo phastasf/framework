@@ -15,6 +15,10 @@ use Prayog\Repl;
  */
 class Shell extends Command
 {
+    public function __construct(
+        private readonly Container $container
+    ) {}
+
     public function getName(): string
     {
         return 'shell';
@@ -25,7 +29,7 @@ class Shell extends Command
         return 'Start an interactive PHP shell (REPL)';
     }
 
-    public function execute(Stdio $stdio, Container $container): int
+    public function execute(Stdio $stdio): int
     {
 
         // Create REPL configuration
@@ -39,7 +43,7 @@ class Shell extends Command
         $repl = new Repl($config);
 
         // Make container available in the REPL
-        $repl->setVariable('container', $container);
+        $repl->setVariable('container', $this->container);
 
         $stdio->writeln();
         $stdio->info('Starting interactive shell...');

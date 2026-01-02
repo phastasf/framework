@@ -13,6 +13,10 @@ use Kram\MigrationManager;
  */
 class Up extends Command
 {
+    public function __construct(
+        private readonly MigrationManager $manager
+    ) {}
+
     public function getName(): string
     {
         return 'm:up';
@@ -23,7 +27,7 @@ class Up extends Command
         return 'Run pending database migrations';
     }
 
-    public function execute(Stdio $stdio, MigrationManager $manager): int
+    public function execute(Stdio $stdio): int
     {
 
         $stdio->writeln();
@@ -31,7 +35,7 @@ class Up extends Command
         $stdio->writeln();
 
         try {
-            $result = $manager->migrate();
+            $result = $this->manager->migrate();
 
             if ($result->success) {
                 if (empty($result->executed)) {
