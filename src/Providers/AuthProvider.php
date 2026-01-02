@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Phast\Providers;
 
 use Jweety\Encoder;
+use Jweety\EncoderInterface;
 use Katora\Container;
 use Katora\ServiceProviderInterface;
 
@@ -24,6 +25,6 @@ class AuthProvider implements ServiceProviderInterface
             return new Encoder($secret, $algorithm);
         }));
 
-        $container->set(Encoder::class, fn (Container $c) => $c->get('auth.encoder'));
+        $container->set(EncoderInterface::class, fn (Container $c) => $c->get('auth.encoder'));
     }
 }
