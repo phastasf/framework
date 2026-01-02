@@ -1,0 +1,24 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{namespace}};
+
+use Katora\Container;
+use Phast\Providers\ProviderInterface;
+
+/**
+ * {{description}} service provider.
+ */
+class {{class}} implements ProviderInterface
+{
+    public function provide(Container $container): void
+    {
+        // Register services here
+    }
+
+    public function init(Container $container): void
+    {
+        // Initialize services here (called after all providers are registered)
+    }
+}

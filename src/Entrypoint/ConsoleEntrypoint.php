@@ -13,6 +13,7 @@ use Phast\Commands\Generate\Event as GenerateEvent;
 use Phast\Commands\Generate\Job;
 use Phast\Commands\Generate\Migration;
 use Phast\Commands\Generate\Model;
+use Phast\Commands\Generate\Provider as GenerateProvider;
 use Phast\Commands\Migrate\Down;
 use Phast\Commands\Migrate\Up;
 use Phast\Commands\Serve;
@@ -48,6 +49,7 @@ class ConsoleEntrypoint
             Job::class,
             GenerateCommand::class,
             GenerateEvent::class,
+            GenerateProvider::class,
             Up::class,
             Down::class,
             ClearCache::class,

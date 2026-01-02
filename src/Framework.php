@@ -81,6 +81,33 @@ class Framework
      */
     protected function getProviders(): array
     {
+        // Load providers from config file
+        $defaultProvidersPath = __DIR__.'/../config/providers.php';
+        $projectProvidersPath = defined('BASE_PATH') ? BASE_PATH.'/config/providers.php' : null;
+
+        // Try project config first, then fall back to default
+        $providersPath = null;
+        if ($projectProvidersPath !== null && file_exists($projectProvidersPath)) {
+            $providersPath = $projectProvidersPath;
+        } elseif (file_exists($defaultProvidersPath)) {
+            $providersPath = $defaultProvidersPath;
+        }
+
+        if ($providersPath !== null) {
+            $providerClasses = require $providersPath;
+            if (is_array($providerClasses)) {
+                $providers = [];
+                foreach ($providerClasses as $providerClass) {
+                    if (is_string($providerClass) && class_exists($providerClass)) {
+                        $providers[] = new $providerClass;
+                    }
+                }
+
+                return $providers;
+            }
+        }
+
+        // Fallback to default providers if config file not found or invalid
         return [
             // ConfigProvider must be first (other providers depend on it)
             new ConfigProvider,

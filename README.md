@@ -184,12 +184,13 @@ class SendEmailJob extends Job
 
 ### Generators
 
+- `g:command` - Generate console command
 - `g:controller` - Generate controller
+- `g:event` - Generate event class
+- `g:job` - Generate job
 - `g:migration` - Generate migration
 - `g:model` - Generate model
-- `g:job` - Generate job
-- `g:command` - Generate console command
-- `g:event` - Generate event class
+- `g:provider` - Generate service provider
 
 ### Database
 

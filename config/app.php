@@ -31,6 +31,11 @@ return [
         'path' => BASE_PATH.'/app/Events',
     ],
 
+    'providers' => [
+        'namespace' => 'App\\Providers',
+        'path' => BASE_PATH.'/app/Providers',
+    ],
+
     'routes' => [
         'web' => BASE_PATH.'/routes/web.php',
     ],
