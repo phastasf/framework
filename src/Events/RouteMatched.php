@@ -36,7 +36,7 @@ class RouteMatched extends Event
         return $this->getParam('route');
     }
 
-    public function getTarget(): mixed
+    public function getRouteTarget(): mixed
     {
         return $this->getParam('target');
     }
