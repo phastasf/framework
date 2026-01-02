@@ -8,6 +8,7 @@ use Jweety\EncoderInterface;
 use Jweety\Exception\InvalidSignatureException;
 use Jweety\Exception\InvalidTokenException;
 use Jweety\Exception\TokenExpiredException;
+use Kunfig\ConfigInterface;
 use Phast\Exception\UnauthorizedException;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -24,6 +25,8 @@ class AuthMiddleware implements MiddlewareInterface
 
     protected EncoderInterface $encoder;
 
+    protected ConfigInterface $config;
+
     /**
      * Paths/prefixes to include (empty = all paths).
      *
@@ -39,11 +42,6 @@ class AuthMiddleware implements MiddlewareInterface
     protected array $exclude = [];
 
     /**
-     * Whether to require authentication (true) or make it optional (false).
-     */
-    protected bool $required = true;
-
-    /**
      * HTTP header name to extract token from (default: Authorization).
      */
     protected string $headerName = 'Authorization';
@@ -55,18 +53,28 @@ class AuthMiddleware implements MiddlewareInterface
 
     public function __construct(
         EncoderInterface $encoder,
-        array $include = [],
-        array $exclude = [],
-        bool $required = true,
-        string $headerName = 'Authorization',
-        string $tokenPrefix = 'Bearer'
+        ConfigInterface $config
     ) {
         $this->encoder = $encoder;
-        $this->include = $include;
-        $this->exclude = $exclude;
-        $this->required = $required;
-        $this->headerName = $headerName;
-        $this->tokenPrefix = $tokenPrefix;
+        $this->config = $config;
+
+        // Load configuration values
+        $include = $this->config->get('auth.middleware.include', []);
+        $exclude = $this->config->get('auth.middleware.exclude', []);
+        $this->headerName = $this->config->get('auth.middleware.header', 'Authorization');
+        $this->tokenPrefix = $this->config->get('auth.middleware.prefix', 'Bearer');
+
+        // Convert ConfigInterface to array if needed
+        if ($include instanceof ConfigInterface) {
+            $include = $include->all();
+        }
+        if ($exclude instanceof ConfigInterface) {
+            $exclude = $exclude->all();
+        }
+
+        // Ensure arrays
+        $this->include = is_array($include) ? $include : [];
+        $this->exclude = is_array($exclude) ? $exclude : [];
     }
 
     public function process(
@@ -89,16 +97,11 @@ class AuthMiddleware implements MiddlewareInterface
         $token = $this->extractToken($request);
 
         if ($token === null) {
-            if ($this->required) {
-                throw new UnauthorizedException(
-                    'Missing authentication token',
-                    null,
-                    ['WWW-Authenticate' => $this->tokenPrefix.' realm="API"']
-                );
-            }
-
-            // Optional auth - continue without token
-            return $handler->handle($request);
+            throw new UnauthorizedException(
+                'Missing authentication token',
+                null,
+                ['WWW-Authenticate' => $this->tokenPrefix.' realm="API"']
+            );
         }
 
         try {
@@ -110,38 +113,23 @@ class AuthMiddleware implements MiddlewareInterface
 
             return $handler->handle($request);
         } catch (TokenExpiredException $e) {
-            if ($this->required) {
-                throw new UnauthorizedException(
-                    'Token has expired',
-                    $e,
-                    ['WWW-Authenticate' => $this->tokenPrefix.' realm="API"']
-                );
-            }
-
-            // Optional auth - continue without valid token
-            return $handler->handle($request);
+            throw new UnauthorizedException(
+                'Token has expired',
+                $e,
+                ['WWW-Authenticate' => $this->tokenPrefix.' realm="API"']
+            );
         } catch (InvalidSignatureException $e) {
-            if ($this->required) {
-                throw new UnauthorizedException(
-                    'Invalid token signature',
-                    $e,
-                    ['WWW-Authenticate' => $this->tokenPrefix.' realm="API"']
-                );
-            }
-
-            // Optional auth - continue without valid token
-            return $handler->handle($request);
+            throw new UnauthorizedException(
+                'Invalid token signature',
+                $e,
+                ['WWW-Authenticate' => $this->tokenPrefix.' realm="API"']
+            );
         } catch (InvalidTokenException $e) {
-            if ($this->required) {
-                throw new UnauthorizedException(
-                    'Invalid token',
-                    $e,
-                    ['WWW-Authenticate' => $this->tokenPrefix.' realm="API"']
-                );
-            }
-
-            // Optional auth - continue without valid token
-            return $handler->handle($request);
+            throw new UnauthorizedException(
+                'Invalid token',
+                $e,
+                ['WWW-Authenticate' => $this->tokenPrefix.' realm="API"']
+            );
         }
     }
 

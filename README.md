@@ -41,10 +41,13 @@ Create `public/index.php`:
 
 ```php
 <?php
+
 require __DIR__.'/../vendor/autoload.php';
+
 define('BASE_PATH', __DIR__.'/..');
 
 $framework = new Phast\Framework;
+
 $framework->getWebEntrypoint()->handle();
 ```
 
@@ -56,9 +59,11 @@ Create `console`:
 #!/usr/bin/env php
 <?php
 require __DIR__.'/vendor/autoload.php';
+
 define('BASE_PATH', __DIR__);
 
 $framework = new Phast\Framework;
+
 exit($framework->getConsoleEntrypoint()->run());
 ```
 
@@ -109,10 +114,34 @@ return function (Router $router) {
 };
 ```
 
+## Middleware
+
+Middleware is configured in `config/middleware.php`:
+
+```php
+// config/middleware.php
+return [
+    // Core framework middleware (required)
+    \Phast\Middleware\ErrorHandlerMiddleware::class,
+    \Phast\Middleware\SessionMiddleware::class,
+    \Phast\Middleware\RoutingMiddleware::class,
+    \Phast\Middleware\DispatcherMiddleware::class,
+    // Add your custom middleware here
+    \App\Middleware\CustomMiddleware::class,
+];
+```
+
+Generate a new middleware:
+
+```bash
+php console g:middleware CustomMiddleware
+```
+
 ## Controllers
 
 ```php
 namespace App\Controllers;
+
 use Phast\Controller;
 
 class HomeController extends Controller
@@ -128,6 +157,7 @@ class HomeController extends Controller
 
 ```php
 namespace App\Models;
+
 use Datum\Model;
 
 class User extends Model
@@ -164,6 +194,7 @@ class CreateUsersTable implements MigrationInterface
 
 ```php
 namespace App\Jobs;
+
 use Qatar\Job;
 
 class SendEmailJob extends Job
@@ -188,6 +219,7 @@ class SendEmailJob extends Job
 - `g:controller` - Generate controller
 - `g:event` - Generate event class
 - `g:job` - Generate job
+- `g:middleware` - Generate middleware class
 - `g:migration` - Generate migration
 - `g:model` - Generate model
 - `g:provider` - Generate service provider

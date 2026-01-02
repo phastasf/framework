@@ -48,7 +48,7 @@ class DispatcherMiddleware implements MiddlewareInterface
     {
         $this->container = $container;
         $this->responseFactory = new ResponseFactory;
-        $this->resolver = new DependencyResolver($container);
+        $this->resolver = $container->get(DependencyResolver::class);
 
         // Get controller namespace from config
         if ($container->has(ConfigInterface::class)) {

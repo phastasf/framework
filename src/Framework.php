@@ -7,22 +7,7 @@ namespace Phast;
 use Katora\Container;
 use Phast\Entrypoint\ConsoleEntrypoint;
 use Phast\Entrypoint\WebEntrypoint;
-use Phast\Providers\AuthProvider;
-use Phast\Providers\CacheProvider;
-use Phast\Providers\CaptchaProvider;
-use Phast\Providers\ClockProvider;
-use Phast\Providers\ConfigProvider;
-use Phast\Providers\DatabaseProvider;
-use Phast\Providers\EventProvider;
-use Phast\Providers\HttpMessageProvider;
-use Phast\Providers\HttpProvider;
-use Phast\Providers\LoggingProvider;
-use Phast\Providers\MailProvider;
-use Phast\Providers\MigrationProvider;
-use Phast\Providers\QueueProvider;
-use Phast\Providers\RouterProvider;
-use Phast\Providers\SessionProvider;
-use Phast\Providers\ViewProvider;
+use Phast\Support\DependencyResolver;
 
 /**
  * Framework bootstrap class.
@@ -42,6 +27,11 @@ class Framework
      */
     protected function bootstrap(): void
     {
+        // Register DependencyResolver as a shared service (used by multiple components)
+        $this->container->set(DependencyResolver::class, $this->container->share(function (Container $c) {
+            return new DependencyResolver($c);
+        }));
+
         // Get all providers
         $providers = $this->getProviders();
 
@@ -93,40 +83,28 @@ class Framework
             $providersPath = $defaultProvidersPath;
         }
 
-        if ($providersPath !== null) {
-            $providerClasses = require $providersPath;
-            if (is_array($providerClasses)) {
-                $providers = [];
-                foreach ($providerClasses as $providerClass) {
-                    if (is_string($providerClass) && class_exists($providerClass)) {
-                        $providers[] = new $providerClass;
-                    }
-                }
+        if ($providersPath === null) {
+            throw new \RuntimeException(
+                'Providers configuration file not found. '.
+                'Expected either '.($projectProvidersPath ?? 'N/A').' or '.$defaultProvidersPath
+            );
+        }
 
-                return $providers;
+        $providerClasses = require $providersPath;
+        if (! is_array($providerClasses)) {
+            throw new \RuntimeException(
+                "Providers configuration file '{$providersPath}' must return an array"
+            );
+        }
+
+        $providers = [];
+        foreach ($providerClasses as $providerClass) {
+            if (is_string($providerClass) && class_exists($providerClass)) {
+                $providers[] = new $providerClass;
             }
         }
 
-        // Fallback to default providers if config file not found or invalid
-        return [
-            // ConfigProvider must be first (other providers depend on it)
-            new ConfigProvider,
-            new CacheProvider,
-            new DatabaseProvider,
-            new MigrationProvider,
-            new LoggingProvider,
-            new RouterProvider,
-            new AuthProvider,
-            new ViewProvider,
-            new SessionProvider,
-            new CaptchaProvider,
-            new QueueProvider,
-            new MailProvider,
-            new ClockProvider,
-            new HttpMessageProvider,
-            new EventProvider,
-            new HttpProvider,
-        ];
+        return $providers;
     }
 
     /**

@@ -27,7 +27,7 @@ class Console extends BaseConsole
         private readonly ?Container $container = null
     ) {
         parent::__construct($commands);
-        $this->resolver = new DependencyResolver($this->container ?? new Container);
+        $this->resolver = ($this->container ?? new Container)->get(DependencyResolver::class);
 
         // Get event dispatcher if available
         if ($this->container !== null && $this->container->has(EventDispatcherInterface::class)) {

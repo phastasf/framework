@@ -11,6 +11,7 @@ use Phast\Commands\Generate\Command as GenerateCommand;
 use Phast\Commands\Generate\Controller;
 use Phast\Commands\Generate\Event as GenerateEvent;
 use Phast\Commands\Generate\Job;
+use Phast\Commands\Generate\Middleware as GenerateMiddleware;
 use Phast\Commands\Generate\Migration;
 use Phast\Commands\Generate\Model;
 use Phast\Commands\Generate\Provider as GenerateProvider;
@@ -49,6 +50,7 @@ class ConsoleEntrypoint
             Job::class,
             GenerateCommand::class,
             GenerateEvent::class,
+            GenerateMiddleware::class,
             GenerateProvider::class,
             Up::class,
             Down::class,

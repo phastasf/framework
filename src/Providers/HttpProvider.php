@@ -4,16 +4,9 @@ declare(strict_types=1);
 
 namespace Phast\Providers;
 
-use Jweety\EncoderInterface;
 use Katora\Container;
 use Kunfig\ConfigInterface;
-use Phast\Middleware\AuthMiddleware;
-use Phast\Middleware\DispatcherMiddleware;
-use Phast\Middleware\ErrorHandlerMiddleware;
-use Phast\Middleware\RoutingMiddleware;
-use Phast\Middleware\SessionMiddleware;
-use Psr\Http\Server\MiddlewareInterface;
-use Tez\Router;
+use Phast\Support\DependencyResolver;
 
 /**
  * HTTP middleware service provider.
@@ -25,75 +18,45 @@ class HttpProvider implements ProviderInterface
         // Register HTTP middleware array (can be overridden)
         $container->set('http.middleware', $container->share(function (Container $c) {
             $middleware = [];
+            $resolver = $c->get(DependencyResolver::class);
+            $config = $c->get(ConfigInterface::class);
 
-            // Error handler must be first to catch all exceptions
-            $middleware[] = new ErrorHandlerMiddleware($c);
+            // Load middleware from config file
+            $defaultMiddlewarePath = __DIR__.'/../../config/middleware.php';
+            $basePath = $config->get('app.base_path');
+            $projectMiddlewarePath = ! empty($basePath) ? $basePath.'/config/middleware.php' : null;
 
-            // Start sessions (needed for flash messages, captcha, etc.)
-            $middleware[] = new SessionMiddleware;
-
-            // Add authentication middleware if configured
-            $authMiddleware = $this->createAuthMiddleware($c);
-            if ($authMiddleware !== null) {
-                $middleware[] = $authMiddleware;
+            // Try project config first, then fall back to default
+            $middlewarePath = null;
+            if ($projectMiddlewarePath !== null && file_exists($projectMiddlewarePath)) {
+                $middlewarePath = $projectMiddlewarePath;
+            } elseif (file_exists($defaultMiddlewarePath)) {
+                $middlewarePath = $defaultMiddlewarePath;
             }
 
-            // Add routing middleware (matches routes)
-            $router = $c->has(Router::class) ? $c->get(Router::class) : $c->get('router');
-            $middleware[] = new RoutingMiddleware($router, $c);
+            if ($middlewarePath === null) {
+                throw new \RuntimeException(
+                    'Middleware configuration file not found. '.
+                    'Expected either '.($projectMiddlewarePath ?? 'N/A').' or '.$defaultMiddlewarePath
+                );
+            }
 
-            // Add dispatcher middleware (dispatches matched routes)
-            $middleware[] = new DispatcherMiddleware($c);
+            $middlewareClasses = require $middlewarePath;
+            if (! is_array($middlewareClasses)) {
+                throw new \RuntimeException(
+                    "Middleware configuration file '{$middlewarePath}' must return an array"
+                );
+            }
+
+            foreach ($middlewareClasses as $middlewareClass) {
+                if (is_string($middlewareClass) && class_exists($middlewareClass)) {
+                    // Use DependencyResolver for all middleware
+                    $middleware[] = $resolver->instantiate($middlewareClass);
+                }
+            }
 
             return $middleware;
         }));
-    }
-
-    /**
-     * Create authentication middleware if configured.
-     */
-    protected function createAuthMiddleware(Container $container): ?MiddlewareInterface
-    {
-        if (! $container->has(EncoderInterface::class)) {
-            return null;
-        }
-
-        $config = $container->get(ConfigInterface::class);
-
-        // Get configuration values using dot notation
-        $include = $config->get('auth.middleware.include', []);
-        $exclude = $config->get('auth.middleware.exclude', []);
-        $required = (bool) $config->get('auth.middleware.required', true);
-        $headerName = $config->get('auth.middleware.header', 'Authorization');
-        $tokenPrefix = $config->get('auth.middleware.prefix', 'Bearer');
-
-        // Convert ConfigInterface to array if needed
-        if ($include instanceof ConfigInterface) {
-            $include = $include->all();
-        }
-        if ($exclude instanceof ConfigInterface) {
-            $exclude = $exclude->all();
-        }
-
-        // Ensure arrays
-        if (! is_array($include)) {
-            $include = [];
-        }
-        if (! is_array($exclude)) {
-            $exclude = [];
-        }
-
-        // Create and return auth middleware
-        $encoder = $container->get(EncoderInterface::class);
-
-        return new AuthMiddleware(
-            $encoder,
-            $include,
-            $exclude,
-            $required,
-            $headerName,
-            $tokenPrefix
-        );
     }
 
     public function init(Container $container): void

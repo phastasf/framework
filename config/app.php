@@ -36,6 +36,11 @@ return [
         'path' => BASE_PATH.'/app/Providers',
     ],
 
+    'middleware' => [
+        'namespace' => 'App\\Middleware',
+        'path' => BASE_PATH.'/app/Middleware',
+    ],
+
     'routes' => [
         'web' => BASE_PATH.'/routes/web.php',
     ],

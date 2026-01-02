@@ -23,7 +23,7 @@ class Worker extends BaseWorker
         ?Container $container = null
     ) {
         parent::__construct($queue, $options);
-        $this->resolver = new DependencyResolver($container ?? new Container);
+        $this->resolver = ($container ?? new Container)->get(DependencyResolver::class);
     }
 
     /**
