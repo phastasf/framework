@@ -7,7 +7,9 @@ namespace Phast\Providers;
 use Katora\Container;
 use Katora\ServiceProviderInterface;
 use Psr\EventDispatcher\EventDispatcherInterface;
+use Psr\EventDispatcher\ListenerProviderInterface;
 use Soochak\EventManager;
+use Soochak\EventManagerInterface;
 
 /**
  * Event service provider.
@@ -22,6 +24,8 @@ class EventProvider implements ServiceProviderInterface
         }));
 
         $container->set(EventDispatcherInterface::class, fn (Container $c) => $c->get('events'));
+        $container->set(ListenerProviderInterface::class, fn (Container $c) => $c->get('events'));
+        $container->set(EventManagerInterface::class, fn (Container $c) => $c->get('events'));
         $container->set(EventManager::class, fn (Container $c) => $c->get('events'));
     }
 }
