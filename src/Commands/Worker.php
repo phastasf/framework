@@ -6,8 +6,9 @@ namespace Phast\Commands;
 
 use Clip\Command;
 use Clip\Stdio;
+use Katora\Container;
+use Phast\Support\Worker as QueueWorker;
 use Qatar\Queue;
-use Qatar\Worker as QueueWorker;
 use Qatar\WorkerOptions;
 
 /**
@@ -16,7 +17,8 @@ use Qatar\WorkerOptions;
 class Worker extends Command
 {
     public function __construct(
-        private readonly Queue $queue
+        private readonly Queue $queue,
+        private readonly Container $container
     ) {}
 
     public function getName(): string
@@ -47,7 +49,7 @@ class Worker extends Command
             stopOnEmpty: $stopOnEmpty
         );
 
-        $worker = new QueueWorker($this->queue, $options);
+        $worker = new QueueWorker($this->queue, $options, $this->container);
 
         $stdio->writeln();
         $stdio->info('Queue worker started');

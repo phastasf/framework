@@ -8,6 +8,9 @@ use Qatar\Job;
 
 class {{class}} extends Job
 {
+    // Add constructor with dependencies if needed
+    // Example: public function __construct(private readonly ConfigInterface $config) { }
+
     /**
      * Handle the job.
      *

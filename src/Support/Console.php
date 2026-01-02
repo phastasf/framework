@@ -2,17 +2,16 @@
 
 declare(strict_types=1);
 
-namespace Phast\Console;
+namespace Phast\Support;
 
 use Clip\Command;
-use Clip\Console;
+use Clip\Console as BaseConsole;
 use Katora\Container;
-use Phast\Support\DependencyResolver;
 
 /**
  * Console implementation with container-based dependency injection.
  */
-class CLI extends Console
+class Console extends BaseConsole
 {
     protected DependencyResolver $resolver;
 

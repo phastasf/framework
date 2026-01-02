@@ -17,7 +17,7 @@ use Phast\Commands\Migrate\Up;
 use Phast\Commands\Serve;
 use Phast\Commands\Shell;
 use Phast\Commands\Worker;
-use Phast\Console\CLI;
+use Phast\Support\Console;
 
 /**
  * Console entrypoint for Phast framework.
@@ -34,7 +34,7 @@ class ConsoleEntrypoint
     /**
      * Create and configure the console application.
      */
-    public function create(): CLI
+    public function create(): Console
     {
         // Register framework commands
         $commands = [
@@ -55,7 +55,7 @@ class ConsoleEntrypoint
         $appCommands = $this->discoverCommands();
         $commands = array_merge($commands, $appCommands);
 
-        return new CLI($commands, $this->container);
+        return new Console($commands, $this->container);
     }
 
     /**
