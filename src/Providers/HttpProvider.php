@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Phast\Providers;
 
-use Jweety\Encoder;
+use Jweety\EncoderInterface;
 use Katora\Container;
 use Katora\ServiceProviderInterface;
 use Kunfig\ConfigInterface;
@@ -55,7 +55,7 @@ class HttpProvider implements ServiceProviderInterface
      */
     protected function createAuthMiddleware(Container $container): ?MiddlewareInterface
     {
-        if (! $container->has(Encoder::class)) {
+        if (! $container->has(EncoderInterface::class)) {
             return null;
         }
 
@@ -85,7 +85,7 @@ class HttpProvider implements ServiceProviderInterface
         }
 
         // Create and return auth middleware
-        $encoder = $container->get(Encoder::class);
+        $encoder = $container->get(EncoderInterface::class);
 
         return new AuthMiddleware(
             $encoder,

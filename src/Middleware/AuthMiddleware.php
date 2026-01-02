@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace Phast\Middleware;
 
-use Jweety\Encoder;
+use Jweety\EncoderInterface;
 use Jweety\Exception\InvalidSignatureException;
 use Jweety\Exception\InvalidTokenException;
 use Jweety\Exception\TokenExpiredException;
@@ -22,7 +22,7 @@ class AuthMiddleware implements MiddlewareInterface
 {
     public const AUTH_ATTRIBUTE = '_auth_claims';
 
-    protected Encoder $encoder;
+    protected EncoderInterface $encoder;
 
     /**
      * Paths/prefixes to include (empty = all paths).
@@ -54,7 +54,7 @@ class AuthMiddleware implements MiddlewareInterface
     protected string $tokenPrefix = 'Bearer';
 
     public function __construct(
-        Encoder $encoder,
+        EncoderInterface $encoder,
         array $include = [],
         array $exclude = [],
         bool $required = true,
