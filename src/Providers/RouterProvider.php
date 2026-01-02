@@ -17,15 +17,93 @@ class RouterProvider implements ServiceProviderInterface
     {
         // Register router
         $container->set('router', $container->share(function (Container $c) {
-            $router = new Router;
+            $config = $c->get('config');
+            $debug = $config->get('app.debug', true);
 
-            // Load routes
-            $this->loadRoutes($router, $c);
+            // Try to load precompiled routes in production mode
+            $precompiled = null;
+            if (! $debug) {
+                $precompiled = $this->loadPrecompiledRoutes($config);
+            }
+
+            $router = new Router($precompiled);
+
+            // Load routes (only if not using precompiled routes)
+            if ($precompiled === null) {
+                $this->loadRoutes($router, $c);
+
+                // Compile and cache routes in production mode
+                if (! $debug) {
+                    $this->cacheRoutes($router, $config);
+                }
+            }
 
             return $router;
         }));
 
         $container->set(Router::class, fn (Container $c) => $c->get('router'));
+    }
+
+    /**
+     * Load precompiled routes from cache file.
+     *
+     * @return array<int, array{0: string, 1: array<string>|null, 2: mixed, 3?: string, 4?: array<string>}>|null
+     */
+    protected function loadPrecompiledRoutes($config): ?array
+    {
+        $basePath = $config->get('app.base_path');
+        $cacheFile = $basePath.'/storage/cache/routes.php';
+
+        if (! file_exists($cacheFile)) {
+            return null;
+        }
+
+        // Check if routes file is newer than cache (cache invalidation)
+        $routesFile = $config->get('app.routes.web');
+        if (empty($routesFile)) {
+            $routesFile = $basePath.'/routes/web.php';
+        }
+        if (! str_starts_with($routesFile, '/')) {
+            $routesFile = $basePath.'/'.ltrim($routesFile, '/');
+        }
+
+        if (file_exists($routesFile) && filemtime($routesFile) > filemtime($cacheFile)) {
+            // Routes file is newer, invalidate cache
+            return null;
+        }
+
+        try {
+            $precompiled = require $cacheFile;
+            if (is_array($precompiled)) {
+                return $precompiled;
+            }
+        } catch (\Throwable $e) {
+            // Invalid cache file, will regenerate
+        }
+
+        return null;
+    }
+
+    /**
+     * Cache compiled routes to disk.
+     */
+    protected function cacheRoutes(Router $router, $config): void
+    {
+        $basePath = $config->get('app.base_path');
+        $cacheDir = $basePath.'/storage/cache';
+        $cacheFile = $cacheDir.'/routes.php';
+
+        // Ensure cache directory exists
+        if (! is_dir($cacheDir)) {
+            mkdir($cacheDir, 0755, true);
+        }
+
+        // Dump compiled routes to cache file
+        try {
+            $router->dump($cacheFile);
+        } catch (\Throwable $e) {
+            // Silently fail if caching fails
+        }
     }
 
     /**
