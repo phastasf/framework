@@ -26,6 +26,11 @@ return [
         'path' => BASE_PATH.'/app/Commands',
     ],
 
+    'events' => [
+        'namespace' => 'App\\Events',
+        'path' => BASE_PATH.'/app/Events',
+    ],
+
     'routes' => [
         'web' => BASE_PATH.'/routes/web.php',
     ],
