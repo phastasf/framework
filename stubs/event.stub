@@ -1,0 +1,27 @@
+<?php
+
+declare(strict_types=1);
+
+namespace {{namespace}};
+
+use Soochak\Event;
+
+/**
+ * Event dispatched when {{description}}.
+ */
+class {{class}} extends Event
+{
+    public function __construct()
+    {
+        parent::__construct(self::class, [
+            // Add event parameters here
+        ]);
+    }
+
+    // Add getter methods for event parameters
+    // Example:
+    // public function getData(): mixed
+    // {
+    //     return $this->getParam('data');
+    // }
+}

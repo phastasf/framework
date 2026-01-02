@@ -7,11 +7,14 @@ namespace Phast\Middleware;
 use Katora\Container;
 use Kunfig\ConfigInterface;
 use Phast\Controller;
+use Phast\Events\ControllerExecuted;
+use Phast\Events\ControllerExecuting;
 use Phast\Exception\HttpException;
 use Phast\Exception\InternalServerErrorException;
 use Phast\Exception\MethodNotAllowedException;
 use Phast\Exception\NotFoundException;
 use Phast\Support\DependencyResolver;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
@@ -39,6 +42,8 @@ class DispatcherMiddleware implements MiddlewareInterface
 
     protected DependencyResolver $resolver;
 
+    protected ?EventDispatcherInterface $dispatcher = null;
+
     public function __construct(Container $container)
     {
         $this->container = $container;
@@ -49,6 +54,11 @@ class DispatcherMiddleware implements MiddlewareInterface
         if ($container->has(ConfigInterface::class)) {
             $config = $container->get(ConfigInterface::class);
             $this->controllerNamespace = $config->get('app.controllers.namespace', 'App\\Controllers');
+        }
+
+        // Get event dispatcher if available
+        if ($container->has(EventDispatcherInterface::class)) {
+            $this->dispatcher = $container->get(EventDispatcherInterface::class);
         }
     }
 
@@ -125,6 +135,11 @@ class DispatcherMiddleware implements MiddlewareInterface
                 $controllerClass = $this->controllerNamespace.'\\'.$controllerClass;
             }
 
+            // Dispatch controller executing event
+            if ($this->dispatcher !== null) {
+                $this->dispatcher->dispatch(new ControllerExecuting($request, $controllerClass, $method, $routeParams));
+            }
+
             // Instantiate controller with constructor DI
             $controller = $this->instantiateController($controllerClass);
 
@@ -139,11 +154,16 @@ class DispatcherMiddleware implements MiddlewareInterface
             if (! $result instanceof ResponseInterface) {
                 $response = $this->responseFactory->createResponse(200);
                 $response->getBody()->write((string) $result);
-
-                return $response;
+            } else {
+                $response = $result;
             }
 
-            return $result;
+            // Dispatch controller executed event
+            if ($this->dispatcher !== null) {
+                $this->dispatcher->dispatch(new ControllerExecuted($request, $response, $controllerClass, $method));
+            }
+
+            return $response;
         }
 
         // Default response

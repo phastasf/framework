@@ -5,6 +5,10 @@ declare(strict_types=1);
 namespace Phast\Entrypoint;
 
 use Katora\Container;
+use Phast\Events\RequestReceived;
+use Phast\Events\ResponseReady;
+use Phast\Events\ResponseSent;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Sandesh\ServerRequestFactory;
 use Sandesh\ServerResponseSender;
 use Tez\Router;
@@ -21,6 +25,8 @@ class WebEntrypoint
 
     protected Router $router;
 
+    protected ?EventDispatcherInterface $dispatcher = null;
+
     public function __construct(?Container $container = null)
     {
         $this->container = $container ?? new Container;
@@ -33,6 +39,11 @@ class WebEntrypoint
             $this->router = $this->container->get('router');
         } else {
             $this->router = new Router;
+        }
+
+        // Get event dispatcher if available
+        if ($this->container->has(EventDispatcherInterface::class)) {
+            $this->dispatcher = $this->container->get(EventDispatcherInterface::class);
         }
     }
 
@@ -82,10 +93,25 @@ class WebEntrypoint
             $_SERVER
         );
 
+        // Dispatch request received event
+        if ($this->dispatcher !== null) {
+            $this->dispatcher->dispatch(new RequestReceived($request));
+        }
+
         // ErrorHandlerMiddleware will catch all exceptions
         $response = $this->pipeline->handle($request);
 
+        // Dispatch response ready event
+        if ($this->dispatcher !== null) {
+            $this->dispatcher->dispatch(new ResponseReady($request, $response));
+        }
+
         $sender = new ServerResponseSender;
         $sender->send($response);
+
+        // Dispatch response sent event
+        if ($this->dispatcher !== null) {
+            $this->dispatcher->dispatch(new ResponseSent($request, $response));
+        }
     }
 }

@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace Phast\Middleware;
 
+use Katora\Container;
+use Phast\Events\RouteMatched;
+use Psr\EventDispatcher\EventDispatcherInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
@@ -20,9 +23,16 @@ class RoutingMiddleware implements MiddlewareInterface
 
     protected Router $router;
 
-    public function __construct(Router $router)
+    protected ?EventDispatcherInterface $dispatcher = null;
+
+    public function __construct(Router $router, ?Container $container = null)
     {
         $this->router = $router;
+
+        // Get event dispatcher from container if available
+        if ($container !== null && $container->has(EventDispatcherInterface::class)) {
+            $this->dispatcher = $container->get(EventDispatcherInterface::class);
+        }
     }
 
     public function process(
@@ -42,6 +52,12 @@ class RoutingMiddleware implements MiddlewareInterface
             $params = $result[2] ?? [];
             foreach ($params as $key => $value) {
                 $request = $request->withAttribute($key, $value);
+            }
+
+            // Dispatch route matched event
+            if ($this->dispatcher !== null) {
+                $target = $result[1] ?? null;
+                $this->dispatcher->dispatch(new RouteMatched($request, $path, $target, $params));
             }
         }
 

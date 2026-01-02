@@ -41,7 +41,7 @@ class HttpProvider implements ServiceProviderInterface
 
             // Add routing middleware (matches routes)
             $router = $c->has(Router::class) ? $c->get(Router::class) : $c->get('router');
-            $middleware[] = new RoutingMiddleware($router);
+            $middleware[] = new RoutingMiddleware($router, $c);
 
             // Add dispatcher middleware (dispatches matched routes)
             $middleware[] = new DispatcherMiddleware($c);

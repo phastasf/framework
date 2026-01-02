@@ -9,6 +9,7 @@ use Katora\Container;
 use Phast\Commands\ClearCache;
 use Phast\Commands\Generate\Command as GenerateCommand;
 use Phast\Commands\Generate\Controller;
+use Phast\Commands\Generate\Event as GenerateEvent;
 use Phast\Commands\Generate\Job;
 use Phast\Commands\Generate\Migration;
 use Phast\Commands\Generate\Model;
@@ -46,6 +47,7 @@ class ConsoleEntrypoint
             Migration::class,
             Job::class,
             GenerateCommand::class,
+            GenerateEvent::class,
             Up::class,
             Down::class,
             ClearCache::class,
