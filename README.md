@@ -266,14 +266,24 @@ MIT License - see [LICENSE](LICENSE) file.
 Built on excellent PSR-compliant libraries:
 
 - [Katora](https://github.com/vaibhavpandeyvpz/katora) - DI Container
-- [Tez](https://github.com/vaibhavpandeyvpz/tez) - Routing
-- [Vidyut](https://github.com/vaibhavpandeyvpz/vidyut) - Middleware Pipeline
+- [Kunfig](https://github.com/vaibhavpandeyvpz/kunfig) - Configuration Management
+- [Databoss](https://github.com/vaibhavpandeyvpz/databoss) - Database Connections
 - [Datum](https://github.com/vaibhavpandeyvpz/datum) - ORM
 - [Kram](https://github.com/vaibhavpandeyvpz/kram) - Migrations
+- [Tez](https://github.com/vaibhavpandeyvpz/tez) - Routing
+- [Vidyut](https://github.com/vaibhavpandeyvpz/vidyut) - Middleware Pipeline
+- [Sandesh](https://github.com/vaibhavpandeyvpz/sandesh) - HTTP Messages
 - [Phew](https://github.com/vaibhavpandeyvpz/phew) - Templates
 - [Filtr](https://github.com/vaibhavpandeyvpz/filtr) - Validation
 - [Drishti](https://github.com/vaibhavpandeyvpz/drishti) - Logging
 - [Godam](https://github.com/vaibhavpandeyvpz/godam) - Caching
 - [Qatar](https://github.com/vaibhavpandeyvpz/qatar) - Queues
 - [Jweety](https://github.com/vaibhavpandeyvpz/jweety) - JWT
-- And more...
+- [Envelope](https://github.com/vaibhavpandeyvpz/envelope) - Email
+- [Phlash](https://github.com/vaibhavpandeyvpz/phlash) - Flash Messages
+- [Ank](https://github.com/vaibhavpandeyvpz/ank) - Captcha
+- [Soochak](https://github.com/vaibhavpandeyvpz/soochak) - Events
+- [Samay](https://github.com/vaibhavpandeyvpz/samay) - Clock
+- [Dakiya](https://github.com/vaibhavpandeyvpz/dakiya) - Session
+- [Clip](https://github.com/vaibhavpandeyvpz/clip) - CLI Commands
+- [Prayog](https://github.com/vaibhavpandeyvpz/prayog) - REPL/Shell (dev)
