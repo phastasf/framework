@@ -124,10 +124,12 @@ return [
     // Core framework middleware (required)
     \Phast\Middleware\ErrorHandlerMiddleware::class,
     \Phast\Middleware\SessionMiddleware::class,
+    // Add AuthMiddleware here if you want authentication
+    // \Phast\Middleware\AuthMiddleware::class,
+    // Add your custom middleware here (before routing)
+    \App\Middleware\CustomMiddleware::class,
     \Phast\Middleware\RoutingMiddleware::class,
     \Phast\Middleware\DispatcherMiddleware::class,
-    // Add your custom middleware here
-    \App\Middleware\CustomMiddleware::class,
 ];
 ```
 
@@ -135,6 +137,57 @@ Generate a new middleware:
 
 ```bash
 php console g:middleware CustomMiddleware
+```
+
+## Service Providers
+
+Service providers are configured in `config/providers.php`:
+
+```php
+// config/providers.php
+return [
+    // ConfigProvider must be first (other providers depend on it)
+    \Phast\Providers\ConfigProvider::class,
+    \Phast\Providers\CacheProvider::class,
+    \Phast\Providers\DatabaseProvider::class,
+    // ... other framework providers
+    // Add your custom providers here
+    \App\Providers\CustomProvider::class,
+];
+```
+
+Generate a new service provider:
+
+```bash
+php console g:provider CustomProvider
+```
+
+Service providers implement `Phast\Providers\ProviderInterface` with two methods:
+
+- `provide(Container $container)`: Register services in the container
+- `init(Container $container)`: Initialize services after all providers are registered
+
+```php
+namespace App\Providers;
+
+use Katora\Container;
+use Phast\Providers\ProviderInterface;
+
+class CustomProvider implements ProviderInterface
+{
+    public function provide(Container $container): void
+    {
+        // Register services here
+        $container->set('custom.service', fn() => new CustomService);
+    }
+
+    public function init(Container $container): void
+    {
+        // Initialize services here (called after all providers are registered)
+        $service = $container->get('custom.service');
+        $service->initialize();
+    }
+}
 ```
 
 ## Controllers
