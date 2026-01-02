@@ -6,6 +6,7 @@ namespace Phast\Commands;
 
 use Clip\Command;
 use Clip\Stdio;
+use Katora\Container;
 use Prayog\Config;
 use Prayog\Repl;
 
@@ -24,14 +25,8 @@ class Shell extends Command
         return 'Start an interactive PHP shell (REPL)';
     }
 
-    public function execute(Stdio $stdio): int
+    public function execute(Stdio $stdio, Container $container): int
     {
-        // Check if container is available
-        if ($this->container === null) {
-            $stdio->error('Container is not available.');
-
-            return 1;
-        }
 
         // Create REPL configuration
         $config = new Config(
@@ -44,7 +39,7 @@ class Shell extends Command
         $repl = new Repl($config);
 
         // Make container available in the REPL
-        $repl->setVariable('container', $this->container);
+        $repl->setVariable('container', $container);
 
         $stdio->writeln();
         $stdio->info('Starting interactive shell...');

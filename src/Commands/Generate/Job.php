@@ -6,6 +6,7 @@ namespace Phast\Commands\Generate;
 
 use Clip\Command;
 use Clip\Stdio;
+use Kunfig\ConfigInterface;
 
 /**
  * Command to generate a job class.
@@ -22,7 +23,7 @@ class Job extends Command
         return 'Generate a new job class';
     }
 
-    public function execute(Stdio $stdio): int
+    public function execute(Stdio $stdio, ConfigInterface $config): int
     {
         $name = $stdio->getArgument(0);
 
@@ -40,7 +41,6 @@ class Job extends Command
         }
 
         // Determine namespace and path from config
-        $config = $this->get('config');
         $namespace = $config->get('app.jobs.namespace', 'App\\Jobs');
         $basePath = $config->get('app.jobs.path');
 

@@ -6,6 +6,7 @@ namespace Phast\Commands;
 
 use Clip\Command;
 use Clip\Stdio;
+use Kunfig\ConfigInterface;
 
 /**
  * Command to start the development server.
@@ -22,13 +23,12 @@ class Serve extends Command
         return 'Start the PHP development server';
     }
 
-    public function execute(Stdio $stdio): int
+    public function execute(Stdio $stdio, ConfigInterface $config): int
     {
         $host = $stdio->getOption('host', '127.0.0.1');
         $port = (int) $stdio->getOption('port', '8000');
 
         // Determine the public directory and router file from config
-        $config = $this->get('config');
         $publicPath = $config->get('app.public.path');
         $routerFile = $config->get('app.public.index');
 

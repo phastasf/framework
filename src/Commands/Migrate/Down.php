@@ -23,15 +23,8 @@ class Down extends Command
         return 'Rollback the last database migration';
     }
 
-    public function execute(Stdio $stdio): int
+    public function execute(Stdio $stdio, MigrationManager $manager): int
     {
-        if (! $this->has(MigrationManager::class)) {
-            $stdio->error('Migration service not found. Make sure MigrationProvider is registered.');
-
-            return 1;
-        }
-
-        $manager = $this->get(MigrationManager::class);
 
         // Get optional count parameter (default: 1)
         $countArg = $stdio->getArgument(0);

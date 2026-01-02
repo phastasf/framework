@@ -25,15 +25,8 @@ class Worker extends Command
         return 'Run queue worker to process jobs';
     }
 
-    public function execute(Stdio $stdio): int
+    public function execute(Stdio $stdio, Queue $queue): int
     {
-        if (! $this->has(Queue::class)) {
-            $stdio->error('Queue service not found. Make sure QueueProvider is registered.');
-
-            return 1;
-        }
-
-        $queue = $this->get(Queue::class);
 
         // Parse worker options from command line
         $sleep = (int) $stdio->getOption('sleep', '3');

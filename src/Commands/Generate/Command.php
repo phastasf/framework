@@ -6,6 +6,7 @@ namespace Phast\Commands\Generate;
 
 use Clip\Command as BaseCommand;
 use Clip\Stdio;
+use Kunfig\ConfigInterface;
 
 /**
  * Command to generate a console command class.
@@ -22,7 +23,7 @@ class Command extends BaseCommand
         return 'Generate a new console command class';
     }
 
-    public function execute(Stdio $stdio): int
+    public function execute(Stdio $stdio, ConfigInterface $config): int
     {
         $name = $stdio->getArgument(0);
 
@@ -40,7 +41,6 @@ class Command extends BaseCommand
         }
 
         // Determine namespace and path from config
-        $config = $this->get('config');
         $namespace = $config->get('app.commands.namespace', 'App\\Commands');
         $basePath = $config->get('app.commands.path');
 

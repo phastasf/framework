@@ -11,12 +11,12 @@ use Phast\Exception\HttpException;
 use Phast\Exception\InternalServerErrorException;
 use Phast\Exception\MethodNotAllowedException;
 use Phast\Exception\NotFoundException;
+use Phast\Support\DependencyResolver;
 use Psr\Http\Message\RequestInterface;
 use Psr\Http\Message\ResponseInterface;
 use Psr\Http\Message\ServerRequestInterface;
 use Psr\Http\Server\MiddlewareInterface;
 use Psr\Http\Server\RequestHandlerInterface;
-use ReflectionClass;
 use ReflectionFunction;
 use ReflectionMethod;
 use ReflectionParameter;
@@ -37,10 +37,13 @@ class DispatcherMiddleware implements MiddlewareInterface
 
     protected string $controllerNamespace = '';
 
+    protected DependencyResolver $resolver;
+
     public function __construct(Container $container)
     {
         $this->container = $container;
         $this->responseFactory = new ResponseFactory;
+        $this->resolver = new DependencyResolver($container);
 
         // Get controller namespace from config
         if ($container->has(ConfigInterface::class)) {
@@ -171,77 +174,8 @@ class DispatcherMiddleware implements MiddlewareInterface
             return new $controllerClass($this->container);
         }
 
-        // Try to resolve constructor arguments
-        $reflection = new ReflectionClass($controllerClass);
-        $constructor = $reflection->getConstructor();
-
-        if ($constructor === null || $constructor->getNumberOfParameters() === 0) {
-            return new $controllerClass;
-        }
-
-        // Resolve constructor parameters (by name or type only, NOT route params)
-        $constructorArgs = $this->resolveConstructorArguments($constructor->getParameters());
-
-        return new $controllerClass(...$constructorArgs);
-    }
-
-    /**
-     * Resolve constructor arguments (by name or type only, NOT route params).
-     *
-     * @param  ReflectionParameter[]  $parameters  The constructor parameters
-     * @return array Resolved argument values
-     */
-    protected function resolveConstructorArguments(array $parameters): array
-    {
-        $args = [];
-
-        foreach ($parameters as $param) {
-            $paramName = $param->getName();
-            $paramType = $param->getType();
-
-            // Special handling for Container
-            if ($paramType && $paramType->getName() === Container::class) {
-                $args[] = $this->container;
-
-                continue;
-            }
-
-            // 1. Try container by parameter name
-            if ($this->container->has($paramName)) {
-                $args[] = $this->container->get($paramName);
-
-                continue;
-            }
-
-            // 2. Try container by type (class/interface name)
-            if ($paramType && ! $paramType->isBuiltin()) {
-                $typeName = $paramType->getName();
-                if ($this->container->has($typeName)) {
-                    $args[] = $this->container->get($typeName);
-
-                    continue;
-                }
-            }
-
-            // 3. Use default value if available
-            if ($param->isDefaultValueAvailable()) {
-                $args[] = $param->getDefaultValue();
-
-                continue;
-            }
-
-            // 4. If optional (nullable), use null
-            if ($param->allowsNull()) {
-                $args[] = null;
-
-                continue;
-            }
-
-            // Cannot resolve parameter
-            throw new \RuntimeException("Cannot resolve constructor parameter '{$paramName}' for {$param->getDeclaringClass()->getName()}");
-        }
-
-        return $args;
+        // Use dependency resolver to instantiate with constructor DI
+        return $this->resolver->instantiate($controllerClass);
     }
 
     /**

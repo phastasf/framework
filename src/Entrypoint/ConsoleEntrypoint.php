@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Phast\Entrypoint;
 
 use Clip\Command as BaseCommand;
-use Clip\Console;
 use Katora\Container;
 use Phast\Commands\ClearCache;
 use Phast\Commands\Generate\Command as GenerateCommand;
@@ -18,6 +17,7 @@ use Phast\Commands\Migrate\Up;
 use Phast\Commands\Serve;
 use Phast\Commands\Shell;
 use Phast\Commands\Worker;
+use Phast\Console\CLI;
 
 /**
  * Console entrypoint for Phast framework.
@@ -34,7 +34,7 @@ class ConsoleEntrypoint
     /**
      * Create and configure the console application.
      */
-    public function create(): Console
+    public function create(): CLI
     {
         // Register framework commands
         $commands = [
@@ -55,7 +55,7 @@ class ConsoleEntrypoint
         $appCommands = $this->discoverCommands();
         $commands = array_merge($commands, $appCommands);
 
-        return new Console($commands, $this->container);
+        return new CLI($commands, $this->container);
     }
 
     /**

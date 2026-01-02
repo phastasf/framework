@@ -6,6 +6,7 @@ namespace Phast\Commands;
 
 use Clip\Command;
 use Clip\Stdio;
+use Kunfig\ConfigInterface;
 use Psr\SimpleCache\CacheInterface;
 
 /**
@@ -23,9 +24,8 @@ class ClearCache extends Command
         return 'Clear cached config, routes, and application cache';
     }
 
-    public function execute(Stdio $stdio): int
+    public function execute(Stdio $stdio, ConfigInterface $config, ?CacheInterface $cache = null): int
     {
-        $config = $this->get('config');
         $basePath = $config->get('app.base_path');
 
         if (empty($basePath)) {
@@ -65,8 +65,7 @@ class ClearCache extends Command
         }
 
         // Clear application cache if available
-        if ($this->has(CacheInterface::class)) {
-            $cache = $this->get(CacheInterface::class);
+        if ($cache !== null) {
             if ($cache->clear()) {
                 $stdio->info('Cleared application cache');
                 $cleared = true;

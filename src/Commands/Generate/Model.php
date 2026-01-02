@@ -6,6 +6,7 @@ namespace Phast\Commands\Generate;
 
 use Clip\Command;
 use Clip\Stdio;
+use Kunfig\ConfigInterface;
 
 /**
  * Command to generate a model class.
@@ -22,7 +23,7 @@ class Model extends Command
         return 'Generate a new model class';
     }
 
-    public function execute(Stdio $stdio): int
+    public function execute(Stdio $stdio, ConfigInterface $config): int
     {
         $name = $stdio->getArgument(0);
 
@@ -37,7 +38,6 @@ class Model extends Command
         $name = ucfirst($name);
 
         // Determine namespace and path from config
-        $config = $this->get('config');
         $namespace = $config->get('app.models.namespace', 'App\\Models');
         $basePath = $config->get('app.models.path');
 

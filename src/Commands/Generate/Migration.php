@@ -6,6 +6,7 @@ namespace Phast\Commands\Generate;
 
 use Clip\Command;
 use Clip\Stdio;
+use Kunfig\ConfigInterface;
 
 /**
  * Command to generate a migration class.
@@ -22,7 +23,7 @@ class Migration extends Command
         return 'Generate a new migration class';
     }
 
-    public function execute(Stdio $stdio): int
+    public function execute(Stdio $stdio, ConfigInterface $config): int
     {
         $name = $stdio->getArgument(0);
 
@@ -39,7 +40,6 @@ class Migration extends Command
         $fileName = "{$version}_{$name}.php";
 
         // Determine path from config
-        $config = $this->get('config');
         $migrationsPath = $config->get('database.migrations');
 
         // If not configured, fall back to default

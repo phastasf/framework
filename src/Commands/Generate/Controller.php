@@ -6,6 +6,7 @@ namespace Phast\Commands\Generate;
 
 use Clip\Command;
 use Clip\Stdio;
+use Kunfig\ConfigInterface;
 
 /**
  * Command to generate a controller class.
@@ -22,7 +23,7 @@ class Controller extends Command
         return 'Generate a new controller class';
     }
 
-    public function execute(Stdio $stdio): int
+    public function execute(Stdio $stdio, ConfigInterface $config): int
     {
         $name = $stdio->getArgument(0);
 
@@ -40,7 +41,6 @@ class Controller extends Command
         }
 
         // Determine namespace and path from config
-        $config = $this->get('config');
         $namespace = $config->get('app.controllers.namespace', 'App\\Controllers');
         $basePath = $config->get('app.controllers.path');
 
