@@ -37,16 +37,16 @@ class ConsoleEntrypoint
     {
         // Register framework commands
         $commands = [
-            ClearCache::class,
-            Controller::class,
-            Down::class,
-            GenerateCommand::class,
-            Job::class,
-            Migration::class,
-            Model::class,
             Serve::class,
-            Up::class,
             Worker::class,
+            Controller::class,
+            Model::class,
+            Migration::class,
+            Job::class,
+            GenerateCommand::class,
+            Up::class,
+            Down::class,
+            ClearCache::class,
         ];
 
         // Discover and load commands from app namespace
