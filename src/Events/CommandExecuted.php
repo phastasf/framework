@@ -13,22 +13,7 @@ use Soochak\Event;
 class CommandExecuted extends Event
 {
     public function __construct(
-        Command $command,
-        int $exitCode
-    ) {
-        parent::__construct(self::class, [
-            'command' => $command,
-            'exitCode' => $exitCode,
-        ]);
-    }
-
-    public function getCommand(): Command
-    {
-        return $this->getParam('command');
-    }
-
-    public function getExitCode(): int
-    {
-        return $this->getParam('exitCode');
-    }
+        public readonly Command $command,
+        public readonly int $exitCode
+    ) {}
 }

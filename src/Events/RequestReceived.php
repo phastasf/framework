@@ -12,15 +12,7 @@ use Soochak\Event;
  */
 class RequestReceived extends Event
 {
-    public function __construct(ServerRequestInterface $request)
-    {
-        parent::__construct(self::class, [
-            'request' => $request,
-        ]);
-    }
-
-    public function getRequest(): ServerRequestInterface
-    {
-        return $this->getParam('request');
-    }
+    public function __construct(
+        public readonly ServerRequestInterface $request
+    ) {}
 }

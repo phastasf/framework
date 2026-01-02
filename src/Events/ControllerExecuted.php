@@ -14,36 +14,9 @@ use Soochak\Event;
 class ControllerExecuted extends Event
 {
     public function __construct(
-        ServerRequestInterface $request,
-        ResponseInterface $response,
-        string $controller,
-        string $action
-    ) {
-        parent::__construct(self::class, [
-            'request' => $request,
-            'response' => $response,
-            'controller' => $controller,
-            'action' => $action,
-        ]);
-    }
-
-    public function getRequest(): ServerRequestInterface
-    {
-        return $this->getParam('request');
-    }
-
-    public function getResponse(): ResponseInterface
-    {
-        return $this->getParam('response');
-    }
-
-    public function getController(): string
-    {
-        return $this->getParam('controller');
-    }
-
-    public function getAction(): string
-    {
-        return $this->getParam('action');
-    }
+        public readonly ServerRequestInterface $request,
+        public readonly ResponseInterface $response,
+        public readonly string $controller,
+        public readonly string $action
+    ) {}
 }

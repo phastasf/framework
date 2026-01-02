@@ -11,17 +11,10 @@ use Soochak\Event;
  */
 class {{class}} extends Event
 {
-    public function __construct()
-    {
-        parent::__construct(self::class, [
-            // Add event parameters here
-        ]);
-    }
-
-    // Add getter methods for event parameters
-    // Example:
-    // public function getData(): mixed
-    // {
-    //     return $this->getParam('data');
-    // }
+    public function __construct(
+        // Add public readonly properties here
+        // Example:
+        // public readonly string $data,
+        // public readonly array $items = []
+    ) {}
 }
