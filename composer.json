@@ -51,6 +51,9 @@
     "vaibhavpandeyvpz/qatar": "^1.0",
     "vaibhavpandeyvpz/envelope": "^1.0"
   },
+  "require-dev": {
+    "vaibhavpandeyvpz/prayog": "^1.0"
+  },
   "autoload": {
     "psr-4": {
       "Phast\\": "src/"

@@ -16,6 +16,7 @@ use Phast\Commands\Generate\Model;
 use Phast\Commands\Migrate\Down;
 use Phast\Commands\Migrate\Up;
 use Phast\Commands\Serve;
+use Phast\Commands\Shell;
 use Phast\Commands\Worker;
 
 /**
@@ -39,6 +40,7 @@ class ConsoleEntrypoint
         $commands = [
             Serve::class,
             Worker::class,
+            Shell::class,
             Controller::class,
             Model::class,
             Migration::class,

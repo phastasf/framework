@@ -198,8 +198,9 @@ class SendEmailJob extends Job
 ### Development
 
 - `serve` - Start development server
-- `uncache` - Clear cached config, routes, and application cache
 - `worker` - Run queue worker
+- `shell` - Start interactive PHP shell (REPL) with container access
+- `uncache` - Clear cached config, routes, and application cache
 
 ## Usage Examples
 
