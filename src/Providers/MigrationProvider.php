@@ -6,13 +6,12 @@ namespace Phast\Providers;
 
 use Databoss\ConnectionInterface;
 use Katora\Container;
-use Katora\ServiceProviderInterface;
 use Kram\MigrationManager;
 
 /**
  * Migration service provider.
  */
-class MigrationProvider implements ServiceProviderInterface
+class MigrationProvider implements ProviderInterface
 {
     public function provide(Container $container): void
     {
@@ -32,5 +31,10 @@ class MigrationProvider implements ServiceProviderInterface
         }));
 
         $container->set(MigrationManager::class, fn (Container $c) => $c->get('migration.manager'));
+    }
+
+    public function init(Container $container): void
+    {
+        // No initialization needed
     }
 }

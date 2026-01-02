@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Phast\Providers;
 
 use Katora\Container;
-use Katora\ServiceProviderInterface;
 use Kunfig\ConfigInterface;
 use Phew\View;
 use Phew\ViewInterface;
@@ -13,7 +12,7 @@ use Phew\ViewInterface;
 /**
  * View service provider.
  */
-class ViewProvider implements ServiceProviderInterface
+class ViewProvider implements ProviderInterface
 {
     public function provide(Container $container): void
     {
@@ -79,5 +78,10 @@ class ViewProvider implements ServiceProviderInterface
         }));
 
         $container->set(ViewInterface::class, fn (Container $c) => $c->get('view'));
+    }
+
+    public function init(Container $container): void
+    {
+        // No initialization needed
     }
 }

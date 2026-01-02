@@ -8,12 +8,11 @@ use Ank\CaptchaGenerator;
 use Ank\CaptchaGeneratorInterface;
 use Ank\MathCaptchaGenerator;
 use Katora\Container;
-use Katora\ServiceProviderInterface;
 
 /**
  * CAPTCHA service provider.
  */
-class CaptchaProvider implements ServiceProviderInterface
+class CaptchaProvider implements ProviderInterface
 {
     public function provide(Container $container): void
     {
@@ -36,5 +35,10 @@ class CaptchaProvider implements ServiceProviderInterface
 
         // Register interface (defaults to text generator)
         $container->set(CaptchaGeneratorInterface::class, fn (Container $c) => $c->get('captcha'));
+    }
+
+    public function init(Container $container): void
+    {
+        // No initialization needed
     }
 }

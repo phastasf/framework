@@ -12,7 +12,6 @@ use Drishti\Logger;
 use Drishti\SimpleLogEntryFormatter;
 use Drishti\StdioBackend;
 use Katora\Container;
-use Katora\ServiceProviderInterface;
 use Kunfig\ConfigInterface;
 use Psr\Clock\ClockInterface;
 use Psr\Log\LoggerInterface;
@@ -20,7 +19,7 @@ use Psr\Log\LoggerInterface;
 /**
  * Logging service provider.
  */
-class LoggingProvider implements ServiceProviderInterface
+class LoggingProvider implements ProviderInterface
 {
     public function provide(Container $container): void
     {
@@ -175,5 +174,10 @@ class LoggingProvider implements ServiceProviderInterface
         }
 
         return new DailyFileBackend($logPath, $formatter, $clock);
+    }
+
+    public function init(Container $container): void
+    {
+        // No initialization needed
     }
 }

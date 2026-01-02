@@ -7,12 +7,11 @@ namespace Phast\Providers;
 use Jweety\Encoder;
 use Jweety\EncoderInterface;
 use Katora\Container;
-use Katora\ServiceProviderInterface;
 
 /**
  * Authentication service provider.
  */
-class AuthProvider implements ServiceProviderInterface
+class AuthProvider implements ProviderInterface
 {
     public function provide(Container $container): void
     {
@@ -26,5 +25,10 @@ class AuthProvider implements ServiceProviderInterface
         }));
 
         $container->set(EncoderInterface::class, fn (Container $c) => $c->get('auth.encoder'));
+    }
+
+    public function init(Container $container): void
+    {
+        // No initialization needed
     }
 }

@@ -6,7 +6,6 @@ namespace Phast\Providers;
 
 use Jweety\EncoderInterface;
 use Katora\Container;
-use Katora\ServiceProviderInterface;
 use Kunfig\ConfigInterface;
 use Phast\Middleware\AuthMiddleware;
 use Phast\Middleware\DispatcherMiddleware;
@@ -19,7 +18,7 @@ use Tez\Router;
 /**
  * HTTP middleware service provider.
  */
-class HttpProvider implements ServiceProviderInterface
+class HttpProvider implements ProviderInterface
 {
     public function provide(Container $container): void
     {
@@ -95,5 +94,10 @@ class HttpProvider implements ServiceProviderInterface
             $headerName,
             $tokenPrefix
         );
+    }
+
+    public function init(Container $container): void
+    {
+        // No initialization needed
     }
 }

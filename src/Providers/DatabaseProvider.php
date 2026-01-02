@@ -8,12 +8,12 @@ use Databoss\Connection;
 use Databoss\ConnectionInterface;
 use Datum\Model;
 use Katora\Container;
-use Katora\ServiceProviderInterface;
+use Psr\EventDispatcher\EventDispatcherInterface;
 
 /**
  * Database service provider.
  */
-class DatabaseProvider implements ServiceProviderInterface
+class DatabaseProvider implements ProviderInterface
 {
     public function provide(Container $container): void
     {
@@ -70,8 +70,16 @@ class DatabaseProvider implements ServiceProviderInterface
 
         // Register interface
         $container->set(ConnectionInterface::class, fn (Container $c) => $c->get('database.connection'));
+    }
 
+    public function init(Container $container): void
+    {
         // Set connection for Datum models
         Model::connect(fn () => $container->get(ConnectionInterface::class));
+
+        // Set event dispatcher for Datum models if available
+        if ($container->has(EventDispatcherInterface::class)) {
+            Model::dispatcher(fn () => $container->get(EventDispatcherInterface::class));
+        }
     }
 }

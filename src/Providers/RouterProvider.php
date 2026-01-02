@@ -5,13 +5,12 @@ declare(strict_types=1);
 namespace Phast\Providers;
 
 use Katora\Container;
-use Katora\ServiceProviderInterface;
 use Tez\Router;
 
 /**
  * Router service provider.
  */
-class RouterProvider implements ServiceProviderInterface
+class RouterProvider implements ProviderInterface
 {
     public function provide(Container $container): void
     {
@@ -120,5 +119,10 @@ class RouterProvider implements ServiceProviderInterface
                 $registerRoutes($router);
             }
         }
+    }
+
+    public function init(Container $container): void
+    {
+        // No initialization needed
     }
 }

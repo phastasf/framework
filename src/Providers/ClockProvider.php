@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace Phast\Providers;
 
 use Katora\Container;
-use Katora\ServiceProviderInterface;
 use Psr\Clock\ClockInterface;
 use Samay\SystemClock;
 
 /**
  * Clock service provider.
  */
-class ClockProvider implements ServiceProviderInterface
+class ClockProvider implements ProviderInterface
 {
     public function provide(Container $container): void
     {
@@ -22,5 +21,10 @@ class ClockProvider implements ServiceProviderInterface
         }));
 
         $container->set(ClockInterface::class, fn (Container $c) => $c->get('clock'));
+    }
+
+    public function init(Container $container): void
+    {
+        // No initialization needed
     }
 }

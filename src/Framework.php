@@ -42,25 +42,20 @@ class Framework
      */
     protected function bootstrap(): void
     {
-        // Register ConfigProvider first (other providers depend on it)
-        $this->container->install(new ConfigProvider);
+        // Get all providers
+        $providers = $this->getProviders();
 
-        // Register all other providers
-        $this->container->install(new CacheProvider);
-        $this->container->install(new DatabaseProvider);
-        $this->container->install(new MigrationProvider);
-        $this->container->install(new LoggingProvider);
-        $this->container->install(new RouterProvider);
-        $this->container->install(new AuthProvider);
-        $this->container->install(new ViewProvider);
-        $this->container->install(new SessionProvider);
-        $this->container->install(new CaptchaProvider);
-        $this->container->install(new QueueProvider);
-        $this->container->install(new MailProvider);
-        $this->container->install(new ClockProvider);
-        $this->container->install(new HttpMessageProvider);
-        $this->container->install(new EventProvider);
-        $this->container->install(new HttpProvider);
+        // Register all providers
+        foreach ($providers as $provider) {
+            $this->container->install($provider);
+        }
+
+        // Initialize all providers after registration
+        foreach ($providers as $provider) {
+            if ($provider instanceof Providers\ProviderInterface) {
+                $provider->init($this->container);
+            }
+        }
 
         // Register entrypoints
         $this->container->set('entrypoint.console', $this->container->share(function (Container $c) {
@@ -77,6 +72,34 @@ class Framework
         // Register entrypoint classes
         $this->container->set(ConsoleEntrypoint::class, fn (Container $c) => $c->get('entrypoint.console'));
         $this->container->set(WebEntrypoint::class, fn (Container $c) => $c->get('entrypoint.web'));
+    }
+
+    /**
+     * Get the service providers.
+     *
+     * @return array<int, \Phast\Providers\ProviderInterface>
+     */
+    protected function getProviders(): array
+    {
+        return [
+            // ConfigProvider must be first (other providers depend on it)
+            new ConfigProvider,
+            new CacheProvider,
+            new DatabaseProvider,
+            new MigrationProvider,
+            new LoggingProvider,
+            new RouterProvider,
+            new AuthProvider,
+            new ViewProvider,
+            new SessionProvider,
+            new CaptchaProvider,
+            new QueueProvider,
+            new MailProvider,
+            new ClockProvider,
+            new HttpMessageProvider,
+            new EventProvider,
+            new HttpProvider,
+        ];
     }
 
     /**

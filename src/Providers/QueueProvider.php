@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Phast\Providers;
 
 use Katora\Container;
-use Katora\ServiceProviderInterface;
 use Kunfig\ConfigInterface;
 use Qatar\ElasticMQQueue;
 use Qatar\Queue;
@@ -15,7 +14,7 @@ use RuntimeException;
 /**
  * Queue service provider.
  */
-class QueueProvider implements ServiceProviderInterface
+class QueueProvider implements ProviderInterface
 {
     public function provide(Container $container): void
     {
@@ -88,5 +87,10 @@ class QueueProvider implements ServiceProviderInterface
         }
 
         return new ElasticMQQueue($awsConfig, $queueName);
+    }
+
+    public function init(Container $container): void
+    {
+        // No initialization needed
     }
 }

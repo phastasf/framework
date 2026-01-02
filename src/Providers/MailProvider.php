@@ -10,14 +10,13 @@ use Envelope\Transports\ResendTransport;
 use Envelope\Transports\SmtpTransport;
 use Envelope\Transports\TransportInterface;
 use Katora\Container;
-use Katora\ServiceProviderInterface;
 use Kunfig\ConfigInterface;
 use RuntimeException;
 
 /**
  * Mail service provider.
  */
-class MailProvider implements ServiceProviderInterface
+class MailProvider implements ProviderInterface
 {
     public function provide(Container $container): void
     {
@@ -69,5 +68,10 @@ class MailProvider implements ServiceProviderInterface
         $apiKey = $config->get('mail.resend.api_key', '');
 
         return new ResendTransport($apiKey);
+    }
+
+    public function init(Container $container): void
+    {
+        // No initialization needed
     }
 }

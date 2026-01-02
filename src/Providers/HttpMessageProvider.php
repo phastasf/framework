@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Phast\Providers;
 
 use Katora\Container;
-use Katora\ServiceProviderInterface;
 use Psr\Http\Message\RequestFactoryInterface;
 use Psr\Http\Message\ResponseFactoryInterface;
 use Psr\Http\Message\ServerRequestFactoryInterface;
@@ -22,7 +21,7 @@ use Sandesh\UriFactory;
 /**
  * HTTP message factory service provider.
  */
-class HttpMessageProvider implements ServiceProviderInterface
+class HttpMessageProvider implements ProviderInterface
 {
     public function provide(Container $container): void
     {
@@ -41,5 +40,10 @@ class HttpMessageProvider implements ServiceProviderInterface
         $container->set(StreamFactoryInterface::class, fn (Container $c) => $c->get('http.stream_factory'));
         $container->set(UploadedFileFactoryInterface::class, fn (Container $c) => $c->get('http.uploaded_file_factory'));
         $container->set(UriFactoryInterface::class, fn (Container $c) => $c->get('http.uri_factory'));
+    }
+
+    public function init(Container $container): void
+    {
+        // No initialization needed
     }
 }

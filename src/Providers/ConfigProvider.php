@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace Phast\Providers;
 
 use Katora\Container;
-use Katora\ServiceProviderInterface;
 use Kunfig\Config;
 use Kunfig\ConfigInterface;
 
 /**
  * Configuration service provider.
  */
-class ConfigProvider implements ServiceProviderInterface
+class ConfigProvider implements ProviderInterface
 {
     public function provide(Container $container): void
     {
@@ -149,5 +148,10 @@ class ConfigProvider implements ServiceProviderInterface
         }
 
         return $configs;
+    }
+
+    public function init(Container $container): void
+    {
+        // No initialization needed
     }
 }

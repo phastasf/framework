@@ -12,7 +12,6 @@ use Godam\Store\MemoryStore;
 use Godam\Store\PredisStore;
 use Godam\Store\RedisStore;
 use Katora\Container;
-use Katora\ServiceProviderInterface;
 use Kunfig\ConfigInterface;
 use Predis\Client;
 use Psr\Cache\CacheItemPoolInterface;
@@ -21,7 +20,7 @@ use Psr\SimpleCache\CacheInterface;
 /**
  * Cache service provider.
  */
-class CacheProvider implements ServiceProviderInterface
+class CacheProvider implements ProviderInterface
 {
     public function provide(Container $container): void
     {
@@ -148,5 +147,10 @@ class CacheProvider implements ServiceProviderInterface
         $memcache->connect($host, $port);
 
         return new MemcacheStore($memcache);
+    }
+
+    public function init(Container $container): void
+    {
+        // No initialization needed
     }
 }
