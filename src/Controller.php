@@ -18,9 +18,9 @@ abstract class Controller
 {
     protected Container $container;
 
-    public function __construct(?Container $container = null)
+    public function setContainer(Container $container)
     {
-        $this->container = $container ?? new Container;
+        $this->container = $container;
     }
 
     /**

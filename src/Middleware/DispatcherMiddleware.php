@@ -188,14 +188,16 @@ class DispatcherMiddleware implements MiddlewareInterface
             throw new InternalServerErrorException("Controller {$controllerClass} not found");
         }
 
+        // Use dependency resolver to instantiate with constructor DI
+        $instance = $this->resolver->instantiate($controllerClass);
+
         // Check if controller extends base Controller and needs container injection
         $isBaseController = is_subclass_of($controllerClass, Controller::class);
         if ($isBaseController) {
-            return new $controllerClass($this->container);
+            $instance->setContainer($this->container);
         }
 
-        // Use dependency resolver to instantiate with constructor DI
-        return $this->resolver->instantiate($controllerClass);
+        return $instance;
     }
 
     /**
