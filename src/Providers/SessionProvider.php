@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace Phast\Providers;
 
 use Katora\Container;
+use Phew\ViewInterface;
 use Phlash\ArrayFlash;
 use Phlash\FlashInterface;
 
@@ -27,6 +28,11 @@ class SessionProvider implements ProviderInterface
 
     public function init(Container $container): void
     {
-        // No initialization needed
+        if ($container->has(ViewInterface::class)) {
+            $view = $container->get(ViewInterface::class);
+            $view->register('flash', function () use ($container) {
+                return $container->get(FlashInterface::class);
+            });
+        }
     }
 }
