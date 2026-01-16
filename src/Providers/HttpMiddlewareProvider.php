@@ -11,7 +11,7 @@ use Phast\Support\DependencyResolver;
 /**
  * HTTP middleware service provider.
  */
-class HttpProvider implements ProviderInterface
+class HttpMiddlewareProvider implements ProviderInterface
 {
     public function provide(Container $container): void
     {

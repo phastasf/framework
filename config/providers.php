@@ -19,5 +19,6 @@ return [
     \Phast\Providers\ClockProvider::class,
     \Phast\Providers\HttpMessageProvider::class,
     \Phast\Providers\EventProvider::class,
-    \Phast\Providers\HttpProvider::class,
+    \Phast\Providers\HttpMiddlewareProvider::class,
+    \Phast\Providers\HttpClientProvider::class,
 ];
