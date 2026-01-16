@@ -17,8 +17,8 @@ use Qatar\WorkerOptions;
 class Worker extends Command
 {
     public function __construct(
-        private readonly Queue $queue,
-        private readonly Container $container
+        private readonly Container $container,
+        private readonly ?Queue $queue = null
     ) {}
 
     public function getName(): string

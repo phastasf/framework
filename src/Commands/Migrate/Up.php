@@ -14,7 +14,7 @@ use Kram\MigrationManager;
 class Up extends Command
 {
     public function __construct(
-        private readonly MigrationManager $manager
+        private readonly ?MigrationManager $manager = null
     ) {}
 
     public function getName(): string
