@@ -29,6 +29,7 @@
   ],
   "require": {
     "php": "^8.2",
+    "middlewares/client-ip": "^2.1",
     "vaibhavpandeyvpz/kunfig": "^2.0",
     "vaibhavpandeyvpz/databoss": "^2.1",
     "vaibhavpandeyvpz/datum": "^1.1",

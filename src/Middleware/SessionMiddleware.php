@@ -40,6 +40,14 @@ class SessionMiddleware implements MiddlewareInterface
     {
         $cookie = $this->config->get('session.cookie', []);
 
+        // Convert ConfigInterface to array if needed
+        if ($cookie instanceof ConfigInterface) {
+            $cookie = $cookie->all();
+        }
+
+        // Ensure array
+        $cookie = is_array($cookie) ? $cookie : [];
+
         // Set cookie name
         if (isset($cookie['name'])) {
             ini_set('session.name', $cookie['name']);

@@ -7,6 +7,9 @@ return [
     // These are always loaded first, in order
     \Phast\Middleware\ErrorHandlerMiddleware::class,
     \Phast\Middleware\SessionMiddleware::class,
+    // Client IP detection middleware (must be before routing)
+    // Configured with trusted proxies for Traefik/Docker setup
+    \App\Middleware\ClientIpMiddleware::class,
     // Add AuthMiddleware here if you want authentication
     // Note: AuthMiddleware requires EncoderInterface to be registered (via AuthProvider)
     // \Phast\Middleware\AuthMiddleware::class,
