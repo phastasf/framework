@@ -103,6 +103,50 @@ return [
 ];
 ```
 
+### Session
+
+Configure session cookie settings:
+
+```php
+// config/session.php
+return [
+    'cookie' => [
+        'name' => env('SESSION_COOKIE', 'PHPSESSID'),
+        'lifetime' => (int) env('SESSION_LIFETIME', 7200),
+        'path' => env('SESSION_PATH', '/'),
+        'domain' => env('SESSION_DOMAIN', null),
+        'secure' => env('SESSION_SECURE', false),
+        'httponly' => env('SESSION_HTTPONLY', true),
+        'samesite' => env('SESSION_SAMESITE', 'Lax'), // 'Strict', 'Lax', or 'None'
+    ],
+];
+```
+
+### Trusted Proxies
+
+When running behind a reverse proxy or load balancer, configure trusted proxies for accurate client IP detection:
+
+```php
+// config/proxies.php
+return [
+    'trusted' => [
+        '10.0.0.0/8',      // Private network
+        '172.16.0.0/12',  // Docker network
+        '192.168.0.0/16', // Private network
+        '127.0.0.1',      // Localhost IPv4
+        '::1',            // Localhost IPv6
+        // Add your production proxy IPs here
+        // '203.0.113.0/24', // Your load balancer IP range
+    ],
+    'headers' => [
+        'Forwarded',
+        'X-Forwarded-For',
+        'X-Real-Ip',
+        'Client-Ip',
+    ],
+];
+```
+
 ## Routing
 
 ```php
@@ -124,6 +168,8 @@ return [
     // Core framework middleware (required)
     \Phast\Middleware\ErrorHandlerMiddleware::class,
     \Phast\Middleware\SessionMiddleware::class,
+    // Client IP detection middleware (must be before routing if behind proxy)
+    // \Phast\Middleware\ClientIpMiddleware::class,
     // Add AuthMiddleware here if you want authentication
     // \Phast\Middleware\AuthMiddleware::class,
     // Add your custom middleware here (before routing)
@@ -138,6 +184,10 @@ Generate a new middleware:
 ```bash
 php console g:middleware CustomMiddleware
 ```
+
+### Client IP Detection
+
+When running behind a reverse proxy or load balancer, add `ClientIpMiddleware` to your middleware stack to correctly detect client IP addresses. The middleware reads trusted proxy configuration from `config/proxies.php` and extracts the real client IP from proxy headers.
 
 ## Service Providers
 
@@ -306,6 +356,18 @@ $logger = $container->get(LoggerInterface::class);
 $logger->info('User logged in', ['user_id' => 123]);
 ```
 
+### HTTP Client
+
+The framework includes a PSR-18 compliant HTTP client:
+
+```php
+use Psr\Http\Client\ClientInterface;
+
+$client = $container->get(ClientInterface::class);
+$request = $requestFactory->createRequest('GET', 'https://api.example.com/data');
+$response = $client->sendRequest($request);
+```
+
 ### Validation
 
 ```php
@@ -371,6 +433,6 @@ Built on excellent PSR-compliant libraries:
 - [Ank](https://github.com/vaibhavpandeyvpz/ank) - Captcha
 - [Soochak](https://github.com/vaibhavpandeyvpz/soochak) - Events
 - [Samay](https://github.com/vaibhavpandeyvpz/samay) - Clock
-- [Dakiya](https://github.com/vaibhavpandeyvpz/dakiya) - Session
+- [Dakiya](https://github.com/vaibhavpandeyvpz/dakiya) - HTTP Client (PSR-18)
 - [Clip](https://github.com/vaibhavpandeyvpz/clip) - CLI Commands
 - [Prayog](https://github.com/vaibhavpandeyvpz/prayog) - REPL/Shell (dev)
