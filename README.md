@@ -168,6 +168,8 @@ return [
     // Core framework middleware (required)
     \Phast\Middleware\ErrorHandlerMiddleware::class,
     \Phast\Middleware\SessionMiddleware::class,
+    // CORS middleware (should be early in pipeline to handle preflight requests)
+    // \Phast\Middleware\CorsMiddleware::class,
     // Client IP detection middleware (must be before routing if behind proxy)
     // \Phast\Middleware\ClientIpMiddleware::class,
     // Add AuthMiddleware here if you want authentication
@@ -188,6 +190,90 @@ php console g:middleware CustomMiddleware
 ### Client IP Detection
 
 When running behind a reverse proxy or load balancer, add `ClientIpMiddleware` to your middleware stack to correctly detect client IP addresses. The middleware reads trusted proxy configuration from `config/proxies.php` and extracts the real client IP from proxy headers.
+
+### CORS (Cross-Origin Resource Sharing)
+
+Add `CorsMiddleware` to your middleware stack to handle cross-origin requests. The middleware automatically handles preflight OPTIONS requests and adds appropriate CORS headers to responses.
+
+The middleware is configured via `config/cors.php`:
+
+```php
+// config/cors.php
+return [
+    // Allowed origins ('*' for all, or array of specific origins)
+    // Note: Cannot use '*' when allow_credentials is true
+    'allowed_origins' => env('CORS_ALLOWED_ORIGINS', '*'),
+
+    // Allowed HTTP methods
+    'allowed_methods' => [
+        'GET',
+        'POST',
+        'PUT',
+        'PATCH',
+        'DELETE',
+        'OPTIONS',
+    ],
+
+    // Allowed request headers ('*' for all, or array of specific headers)
+    'allowed_headers' => env('CORS_ALLOWED_HEADERS', '*'),
+
+    // Headers that can be exposed to the client
+    'exposed_headers' => [],
+
+    // Maximum age (in seconds) for preflight request cache
+    'max_age' => (int) env('CORS_MAX_AGE', 86400),
+
+    // Allow credentials (cookies, authorization headers, etc.)
+    // Note: When true, allowed_origins cannot be '*'
+    'allow_credentials' => (bool) env('CORS_ALLOW_CREDENTIALS', false),
+
+    // Paths/prefixes to include (empty = all paths)
+    'include' => [],
+
+    // Paths/prefixes to exclude
+    'exclude' => [],
+];
+```
+
+#### Configuration Examples
+
+**Allow all origins (development):**
+
+```php
+'allowed_origins' => '*',
+'allow_credentials' => false,
+```
+
+**Allow specific origins (production):**
+
+```php
+'allowed_origins' => [
+    'https://example.com',
+    'https://www.example.com',
+],
+'allow_credentials' => true,
+```
+
+**Apply CORS only to API routes:**
+
+```php
+'include' => ['/api'],
+'exclude' => [],
+```
+
+**Exclude certain paths from CORS:**
+
+```php
+'include' => [],
+'exclude' => ['/admin', '/internal'],
+```
+
+#### Important Notes
+
+- When `allow_credentials` is `true`, `allowed_origins` cannot be `'*'` (must specify exact origins)
+- The middleware automatically handles preflight OPTIONS requests
+- Path matching uses prefix-based matching (paths starting with the pattern)
+- CORS headers are only added when the request includes an `Origin` header
 
 ## Service Providers
 
