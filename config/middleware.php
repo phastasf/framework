@@ -8,7 +8,7 @@ return [
     \Phast\Middleware\ErrorHandlerMiddleware::class,
     \Phast\Middleware\SessionMiddleware::class,
     // CORS middleware (should be early in pipeline to handle preflight requests)
-    // \Phast\Middleware\CorsMiddleware::class,
+    \Phast\Middleware\CorsMiddleware::class,
     // Client IP detection middleware (must be before routing)
     // Configured with trusted proxies for Traefik/Docker setup
     \Phast\Middleware\ClientIpMiddleware::class,
