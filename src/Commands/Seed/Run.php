@@ -34,7 +34,11 @@ class Run extends Command
 
     public function execute(Stdio $stdio): int
     {
-        $seedList = $this->config->get('database.seed');
+        $seedList = $this->config->get('database.seed', []);
+
+        if ($seedList instanceof ConfigInterface) {
+            $seedList = $seedList->all();
+        }
 
         if (empty($seedList) || ! is_array($seedList)) {
             $stdio->info('No seeders configured. Add class names to config database.seed.');
