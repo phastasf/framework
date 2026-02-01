@@ -44,4 +44,13 @@ return [
     ],
 
     'migrations' => BASE_PATH.'/database/migrations',
+
+    // Seeders directory (where g:seeder creates files)
+    'seeders' => BASE_PATH.'/database/seeders',
+
+    // Seeders to run when executing the "seed" command (class names only, no namespace)
+    'seed' => [
+        'DatabaseSeeder',
+        // DatabaseSeeder::class,
+    ],
 ];

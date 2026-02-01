@@ -1,0 +1,25 @@
+<?php
+
+declare(strict_types=1);
+
+use Databoss\ConnectionInterface;
+use Phast\Database\SeederInterface;
+
+class {{class}} implements SeederInterface
+{
+    public function __construct(
+        private readonly ConnectionInterface $connection
+    ) {}
+
+    public function run(): void
+    {
+        // Insert data via raw connection, e.g.:
+        // $this->connection->insert('users', ['name' => 'John', 'email' => 'john@example.com']);
+
+        // Or use models (ensure DatabaseProvider is loaded so Model::connect is set):
+        // $user = new \App\Models\User;
+        // $user->name = 'Jane';
+        // $user->email = 'jane@example.com';
+        // $user->save();
+    }
+}

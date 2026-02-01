@@ -379,6 +379,45 @@ class CreateUsersTable implements MigrationInterface
 }
 ```
 
+## Seeders
+
+Seeders add fake or test data to the database. You can insert data via the connection (raw) or using models. Dependencies (e.g. `ConnectionInterface`) are injected via the seeder constructor and resolved by the container. Only the seeders listed in config `database.seed` are run when you execute the `seed` command.
+
+```php
+// Generated seeder (implements Phast\Database\SeederInterface)
+// Dependencies are injected via constructor and resolved by the container.
+use Databoss\ConnectionInterface;
+use Phast\Database\SeederInterface;
+
+class UserSeeder implements SeederInterface
+{
+    public function __construct(
+        private readonly ConnectionInterface $connection
+    ) {}
+
+    public function run(): void
+    {
+        // Raw connection
+        $this->connection->insert('users', ['name' => 'John', 'email' => 'john@example.com']);
+
+        // Or via model
+        $user = new \App\Models\User;
+        $user->name = 'Jane';
+        $user->email = 'jane@example.com';
+        $user->save();
+    }
+}
+```
+
+Configure which seeders run in `config/database.php`:
+
+```php
+'seed' => [
+    'DatabaseSeeder',
+    'UserSeeder',
+],
+```
+
 ## Queue Jobs
 
 ```php
@@ -412,11 +451,13 @@ class SendEmailJob extends Job
 - `g:migration` - Generate migration
 - `g:model` - Generate model
 - `g:provider` - Generate service provider
+- `g:seeder` - Generate seeder class
 
 ### Database
 
 - `m:up` - Run pending migrations
 - `m:down [count]` - Rollback migrations (default: 1)
+- `seed` - Run database seeders (only those in config `database.seed`)
 
 ### Development
 

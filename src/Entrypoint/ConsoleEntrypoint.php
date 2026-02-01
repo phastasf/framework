@@ -15,8 +15,10 @@ use Phast\Commands\Generate\Middleware as GenerateMiddleware;
 use Phast\Commands\Generate\Migration;
 use Phast\Commands\Generate\Model;
 use Phast\Commands\Generate\Provider as GenerateProvider;
+use Phast\Commands\Generate\Seeder as GenerateSeeder;
 use Phast\Commands\Migrate\Down;
 use Phast\Commands\Migrate\Up;
+use Phast\Commands\Seed\Run as SeedRun;
 use Phast\Commands\Serve;
 use Phast\Commands\Shell;
 use Phast\Commands\Worker;
@@ -47,6 +49,7 @@ class ConsoleEntrypoint
             Controller::class,
             Model::class,
             Migration::class,
+            GenerateSeeder::class,
             Job::class,
             GenerateCommand::class,
             GenerateEvent::class,
@@ -54,6 +57,7 @@ class ConsoleEntrypoint
             GenerateProvider::class,
             Up::class,
             Down::class,
+            SeedRun::class,
             ClearCache::class,
         ];
 
